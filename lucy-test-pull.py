@@ -12,3 +12,4 @@ movie = pd.read_csv("/Users/lucyadeniji/Documents/Github/dsi-final/data/movie_da
 print("Hi summer, first github push test!")
 #print(movie.head())
 
+
