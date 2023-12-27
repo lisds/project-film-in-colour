@@ -4,9 +4,12 @@ import pandas as pd
 pd.set_option('display.max_rows', 100)
 pd.set_option('mode.copy_on_write', True)
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 #READ THE DATA
-df = pd.read_csv("movie_metadata.csv")
+df = pd.read_csv("C:/Users/Summe/Documents/dsip-work/film-in-colour/project-film-in-colour/movie_metadata.csv")
+
 
 #START REPLICATION
 #creating a new filtered df with only the years 2006-2017
@@ -18,7 +21,7 @@ filtered_df.drop_duplicates(subset='movie_title', inplace = True)
 #drop animated films
 filtered_df.drop(filtered_df[filtered_df['genres'].str.contains('Animation', na=False)].index, inplace=True)
 
-#dropna
+#dropna for gross and movie title
 filtered_df.dropna(subset=['movie_title', 'gross'], inplace=True)
 
 #drop values for films not in the USA
@@ -30,10 +33,10 @@ filtered_df.drop(filtered_df[filtered_df['language'] != 'English'].index, inplac
 #drop all rows without revenue data
 filtered_df.drop(filtered_df[filtered_df['gross'] == 0].index, inplace=True)
 
-#finds films with 0 budget
+#finds films with no budget values
 zero_budget = filtered_df[pd.isna(filtered_df['budget'])]
 
-#create new df for films with 0 budget
+#create new df for films with no budget
 zero_budget_df = zero_budget[[ 'movie_title', 'title_year']].copy()
 
 #strip white space
@@ -169,470 +172,266 @@ budget_dict = {
     'Shanghai Calling': 10443,
     }
 
+
 # Create a new column for 'estimate budget' and map the dictionary to fill the missing values
 zero_budget_df['estimate budget'] = zero_budget_df['movie_title'].map(budget_dict)
 
 #map onto the cleaned dataframe
+filtered_df['movie_title'] = filtered_df['movie_title'].str.strip().astype(str)
 filtered_df['budget'] = filtered_df['budget'].fillna(filtered_df['movie_title'].map(budget_dict))
 
-#drop remaining Nan values
+#drop the Nan value
 filtered_df = filtered_df.dropna(subset=['budget'])
 
-#groupby year and find top 30 films with highest budget
+#groupby year and find top 10 films with highest budget
 top10_by_year = filtered_df.groupby('title_year').apply(lambda group: group.nlargest(10, 'budget'))
 
-#create top actors df
-top_actors = top10_by_year.loc[:,['movie_title','title_year','actor_1_name','actor_2_name','actor_3_name']]
+#create top actors df with top 10 films
+top_actors = top10_by_year.loc[:,['movie_title','title_year','content_rating','actor_1_name','actor_2_name','actor_3_name', 'budget','gross', 'genres']]
+top_actors.reset_index(drop=True, inplace=True)
+top_actors['actor_1_name'].str.strip()
+top_actors['actor_2_name'].str.strip()
+top_actors['actor_3_name'].str.strip()
+top_actors['movie_title'].str.strip()
 
-#FIND DUPLICATE/UNIQUE ACTORS
-
-def find_duplicate_and_unique_actors(dataframe):
-    # Combine all actor columns into a single Series
-    all_actors_series = pd.concat([
-        dataframe['actor_1_name'],
-        dataframe['actor_2_name'],
-        dataframe['actor_3_name']
-    ], ignore_index=True)
-
-    # Find duplicated actors
-    duplicated_actors = all_actors_series[all_actors_series.duplicated(keep=False)].tolist()
-
-    # Find unique actors (appearing only once)
-    unique_actors = all_actors_series.drop_duplicates(keep=False).tolist()
-
-    return duplicated_actors, unique_actors
-
-duplicated_actors, unique_actors = find_duplicate_and_unique_actors(top_actors)
-
-#ACTORS THAT APPEAR MORE THAN ONCE
-
-#count duplicate actors and create list
-from collections import Counter
-dup_actor_counts = Counter(duplicated_actors)
-
-dup_actor_counts
-
-#LIST OF UNIQUE ACTORS
-unique_actors
-
-#len is 157
-len(unique_actors)
-
-unique_actors_df = pd.DataFrame(columns=['movie_title', 'title_year', 'actor_name'])
-
-# Iterate through each actor in the unique_actors list
-for actor in unique_actors:
-    # Check if the actor appears in any of the three actor columns
-    mask = top_actors[['actor_1_name', 'actor_2_name', 'actor_3_name']].isin([actor]).any(axis=1)
-    
-    # Extract the relevant rows and columns and append to the unique_actors_df
-    actor_rows = top_actors.loc[mask, ['movie_title', 'title_year']].copy()
-    actor_rows['actor_name'] = actor
-    unique_actors_df = pd.concat([unique_actors_df, actor_rows])
-
-sorted_unique_df = unique_actors_df.sort_values('movie_title')
-sorted_unique_df
-
-#use the unique and duplicate lists to build dictionaries with the missing diversity and starpower data
-
-#create diversity dict
-
-#gender/race/birth year
-dup_diversity_dict = {
-'Johnny Depp': ('M', 'W', 1963),
-'J.K. Simmons': ('M', 'W', 1955),
-'Christopher Lee': ('M', 'W', 1922),
-'Will Smith': ('M', 'B', 1968),
-'Chris Evans': ('M', 'W', 1981),
-'Nicolas Cage': ('M', 'W', 1964),
-'Peter Dinklage': ('M', 'W', 1969),
-'Christian Bale': ('M', 'W', 1974),
-'Brad Pitt': ('M', 'W', 1963),
-'Robert Downey Jr.': ('M', 'W', 1965),
-'Glenn Morshower': ('M', 'W', 1959),
-'Oliver Platt': ('M', 'W', 1960),
-'Joseph Gordon-Levitt': ('M', 'W', 1981),
-'Robin Williams': ('M', 'W', 1951),
-'Hugh Jackman': ('M', 'W', 1968),
-'Chris Hemsworth':('M', 'W', 1983),
-'Jeff Bridges': ('M', 'W', 1949),
-'Leonardo DiCaprio': ('M', 'W', 1974),
-'Anthony Hopkins': ('M', 'W', 1937),
-'Ryan Reynolds': ('M', 'W', 1937),
-'Jennifer Lawrence': ('F', 'W',1990),
-'Tom Cruise': ('M', 'W', 1962),
-'Paul Walker': ('M', 'W', 1973),
-'Tom Hardy': ('M', 'W', 1977),
-'Emma Stone':('F', 'W', 1988),
-'Liam Neeson': ('M', 'W', 1952),
-'Aidan Turner': ('M', 'W', 1977),
-'Michael Fassbender':('M', 'W', 1977),
-'Henry Cavill': ('M', 'W', 1983),
-'Eddie Marsan':('M', 'W', 1968),
-'Scarlett Johansson': ('F', 'W', 1984),
-'Judy Greer': ('F', 'W', 1975),
-'Bryce Dallas Howard': ('F', 'W', 1981),
-'Dominic Cooper':('M', 'W', 1978),
-'James Franco':('M', 'W', 1978),
-'Morgan Freeman': ('M', 'B', 1937),
-'Edgar Ramírez':('M', 'H', 1977),
-'Ray Winstone':('M', 'W', 1957),
-'Charlize Theron': ('F', 'W', 1975),
-'Steve Coogan': ('M', 'W', 1965),
-'Kevin Dunn':('M', 'W', 1956),
-'Rami Malek': ('M', 'W', 1981),
-'William Hurt':('M', 'W', 1950),
-'Alan Rickman': ('M', 'W', 1946),
-'Sam Claflin':('M', 'W', 1986),
-'Vin Diesel': ('M', 'W', 1967),
-'Andrew Garfield': ('M', 'W', 1983),
-'Alexander Skarsgård': ('M', 'W', 1976),
-'Adam Brown':('M', 'W', 1980),
-'Mila Kunis': ('F', 'W', 1983),
-'Jon Favreau': ('M', 'W', 1966),
-'Bruce Greenwood':('M', 'W', 1956),
-'Anne Hathaway': ('F', 'W', 1982),
-'Hayley Atwell':('F', 'W', 1982),
-'James Nesbitt':('M', 'W', 1965),
+# Manually find the diversity data and create a dict
+# Unique actors dictionary
+# Name: Gender(F/N/M), Race (W/B/H/A/O), Birth Year, STARPower 10 weeks before release
+diversity_dict = {
+    'Liam James': ('M', 'W', 1996),
+    'Tom McCarthy': ('M', 'W', 1966),
+    'Cary-Hiroyuki Tagawa': ('M', 'A', 1950),
+    'Keanu Reeves': ('M', 'O', 1964),
+    'Jin Akanishi': ('M', 'A', 1984),
+    'Ayelet Zurer': ('F', 'O', 1969),
+    'Tom Hanks': ('M', 'W', 1956),
+    'Armin Mueller-Stahl': ('M', 'W', 1930),
+    'T.I.': ('M', 'B', 1980),
+    'CCH Pounder': ('F', 'B', 1952),
+    'Wes Studi': ('M', 'A', 1947),
+    'Joel David Moore': ('M', 'W', 1977),
+    'Alan D. Purwin': ('M', 'W', 1961),
+    'Lauren Cohan': ('F', 'W', 1982),
+    'Tadanobu Asano': ('M', 'A', 1973),
+    'Gary Oldman': ('M', 'W', 1958),
+    'Kodi Smit-McPhee': ('M', 'W', 1996),
+    'Lara Pulver': ('F', 'W', 1980),
+    'Noah Taylor': ('M', 'W', 1969),
+    'Steve Carell': ('M', 'W', 1962),
+    'Jimmy Bennett': ('M', 'W', 1996),
+    'Andre Braugher': ('M', 'B', 1962),
+    'Ioan Gruffudd': ('M', 'W', 1973),
+    'Dwayne Johnson': ('M', 'O', 1972),
+    'Jason Statham': ('M', 'W', 1967),
+    'Dennis Quaid': ('M', 'W', 1954),
+    'Leo Howard': ('M', 'W', 1997),
+    'Peter Fonda': ('M', 'W', 1940),
+    'Matt Long': ('M', 'W', 1980),
+    'Kate McKinnon': ('F', 'W', 1984),
+    'Ed Begley Jr.': ('M', 'W', 1949),
+    'Zach Woods': ('M', 'O', 1984),
+    'Temuera Morrison': ('M', 'O', 1960),
+    'Taika Waititi': ('M', 'O', 1975),
+    'Djimon Hounsou': ('M', 'B', 1964),
+    'Bradley Cooper': ('M', 'W', 1975),
+    'Chloë Grace Moretz': ('F', 'W', 1997),
+    'Willow Smith': ('F', 'B', 2000),
+    'Alice Braga': ('F', 'H', 1983),
+    'Vivica A. Fox': ('F', 'B', 1964),
+    'Judd Hirsch': ('M', 'W', 1935),
+    'Sela Ward': ('F', 'W', 1956),
+    'Harrison Ford': ('M', 'W', 1942),
+    'Jim Broadbent': ('M', 'W', 1949),
+    'Mackenzie Foy': ('F', 'W', 2000),
+    'Matthew McConaughey': ('M', 'W', 1969),
+    'Don Cheadle': ('M', 'B', 1964),
+    'Ewen Bremner': ('M', 'W', 1972),
+    'Ralph Brown': ('M', 'W', 1957),
+    'Daryl Sabara': ('M', 'W', 1992),
+    'Samantha Morton': ('F', 'W', 1977),
+    'Polly Walker': ('F', 'W', 1966),
+    'Eddie Redmayne': ('M', 'W', 1982),
+    'Channing Tatum': ('M', 'W', 1980),
+    'Omar Sy': ('M', 'B', 1978),
+    'Sharlto Copley': ('M', 'W', 1973),
+    'Angelina Jolie Pitt': ('F', 'W', 1975),
+    'Sam Riley': ('M', 'W', 1980),
+    'Christopher Meloni': ('M', 'W', 1961),
+    'Harry Lennix': ('M', 'B', 1964),
+    'Nicole Scherzinger': ('F', 'O', 1978),
+    'Michael Stuhlbarg': ('M', 'W', 1968),
+    'Michael Nyqvist': ('M', 'W', 1960),
+    'Jeremy Renner': ('M', 'W', 1971),
+    'Tim Holmes': ('M', 'W', 1967),
+    'Larry Joe Campbell': ('M', 'W', 1970),
+    'Clifton Collins Jr.': ('M', 'H', 1970),
+    'Charlie Hunnam': ('M', 'W', 1980),
+    'Nonso Anozie': ('M', 'B', 1978),
+    'Cara Delevingne': ('F', 'W', 1992),
+    'Orlando Bloom': ('M', 'W', 1977),
+    'Jack Davenport': ('M', 'W', 1973),
+    'Stephen Graham': ('M', 'W', 1973),
+    'Jake Gyllenhaal': ('M', 'W', 1980),
+    'Richard Coyle': ('M', 'W', 1972),
+    'Reece Ritchie': ('M', 'W', 1986),
+    'Sean Harris': ('M', 'W', 1966),
+    'Scott Grimes': ('M', 'W', 1971),
+    'Mark Addy': ('M', 'W', 1964),
+    'Tzi Ma': ('M', 'A', 1962),
+    'Noémie Lenoir': ('F', 'O', 1979),
+    'Dana Ivey': ('F', 'W', 1941),
+    'Kristen Stewart': ('F', 'W', 1990),
+    'Nicholas Elia': ('M', 'W', 1997),
+    'Scott Porter': ('M', 'W', 1979),
+    'Kick Gurry': ('M', 'W', 1978),
+    'Kirsten Dunst': ('F', 'W', 1982),
+    'Lydia Wilson': ('F', 'W', 1984),
+    'Sofia Boutella': ('F', 'O', 1982),
+    'Melissa Roxburgh': ('F', 'W', 1992),
+    'Noel Clarke': ('M', 'B', 1975),
+    'Benedict Cumberbatch': ('M', 'W', 1976),
+    'Leonard Nimoy': ('M', 'W', 1931),
+    'Robin Atkin Downes': ('M', 'W', 1976),
+    'Ike Barinholtz': ('M', 'W', 1977),
+    'James Frain': ('M', 'W', 1968),
+    'Olivia Wilde': ('F', 'W', 1984),
+    'Emilia Clarke': ('F', 'W', 1986),
+    'Matt Smith': ('M', 'W', 1982),
+    'Common': ('M', 'B', 1972),
+    'Tony Curran': ('M', 'W', 1969),
+    'Mackenzie Crook': ('M', 'W', 1971),
+    'Toby Jones': ('M', 'W', 1966),
+    'B.J. Novak': ('M', 'W', 1979),
+    'Chris Zylka': ('M', 'W', 1985),
+    'Matt Damon': ('M', 'W', 1970),
+    'Albert Finney': ('M', 'W', 1936),
+    'Pierfrancesco Favino': ('M', 'W', 1969),
+    'Damián Alcázar': ('M', 'H', 1953),
+    'Shane Rangi': ('M', 'O', 1969),
+    'Laura Brent': ('F', 'W', 1988),
+    'Bruce Spence': ('M', 'W', 1945),
+    'Jason Flemyng': ('M', 'W', 1966),
+    'Julia Ormond': ('F', 'W', 1965),
+    'Heath Ledger': ('M', 'W', 1979),
+    'Kristin Scott Thomas': ('F', 'W', 1960),
+    'Eva Green': ('F', 'W', 1980),
+    'Josh Hutcherson': ('M', 'W', 1992),
+    'Philip Seymour Hoffman': ('M', 'W', 2014),
+    'Peter Mensah': ('M', 'B', 1959),
+    'Ty Burrell': ('M', 'W', 1967),
+    'Aasif Mandvi': ('M', 'A', 1966),
+    'Seychelle Gabriel': ('F', 'H', 1991),
+    'Noah Ringer': ('M', 'W', 1996),
+    'Christoph Waltz': ('M', 'W', 1956),
+    'Casper Crump': ('M', 'W', 1977),
+    'Ruth Wilson': ('F', 'W', 1982),
+    'Tom Wilkinson': ('M', 'W', 1948),
+    'Jet Li': ('M', 'A', 1963),
+    'Brendan Fraser': ('M', 'W', 1968),
+    'Russell Wong': ('M', 'A', 1963),
+    'Lukas Haas': ('M', 'W', 1976),
+    'Omar Benson Miller': ('M', 'B', 1978),
+    'Robert Capron': ('M', 'W', 1998),
+    'Art Malik': ('M', 'A', 1952),
+    'Simon Merrells': ('M', 'W', 1965),
+    'Natalie Portman': ('F', 'O', 1981),
+    'Thomas Robinson': ('M', 'W', 2002),
+    'Chris Bauer': ('M', 'W', 1966),
+    'Sophia Myles': ('F','W',1980),
+    'Bingbing Li': ('F','A',1973),
+    'Kelsey Grammer': ('M','W',1955),
+    'Lester Speight': ('M','B',1963),
+    'Ramon Rodriguez': ('M','H',1979),
+    "Michael O'Neill": ('M','W',1951),
+    'Zack Ward': ('M','W',1970),
+    'Brandon T. Jackson': ('M','B',1984),
+    'Callum Rennie': ('M','W',1960),
+    'Ruth Negga': ('F','O',1982),
+    'Stephen McHattie': ('M','W',1947),
+    'Billy Crudup': ('M','W',1968),
+    'Matt Frewer': ('M','W',1958),
+    'Peter Capaldi': ('M','W',1958),
+    'Mireille Enos': ('F','W',1975),
+    'Lily James': ('F','W',1989),
+    'Dominic Monaghan': ('M','W',1976),
+    'Tye Sheridan': ('M','W',1996),
+    'Jill Hennessy': ('F', 'W', 1968),
+    'Tichina Arnold': ('F', 'B', 1969),
+    'Drew Sidora': ('F', 'B', 1985),
+    'Johnny Depp': ('M', 'W', 1963),
+    'J.K. Simmons': ('M', 'W', 1955),
+    'Christopher Lee': ('M', 'W', 1922),
+    'Will Smith': ('M', 'B', 1968),
+    'Chris Evans': ('M', 'W', 1981),
+    'Nicolas Cage': ('M', 'W', 1964),
+    'Peter Dinklage': ('M', 'W', 1969),
+    'Christian Bale': ('M', 'W', 1974),
+    'Brad Pitt': ('M', 'W', 1963),
+    'Robert Downey Jr.': ('M', 'W', 1965),
+    'Glenn Morshower': ('M', 'W', 1959),
+    'Oliver Platt': ('M', 'W', 1960),
+    'Joseph Gordon-Levitt': ('M', 'W', 1981),
+    'Robin Williams': ('M', 'W', 1951),
+    'Hugh Jackman': ('M', 'W', 1968),
+    'Chris Hemsworth':('M', 'W', 1983),
+    'Jeff Bridges': ('M', 'W', 1949),
+    'Leonardo DiCaprio': ('M', 'W', 1974),
+    'Anthony Hopkins': ('M', 'W', 1937),
+    'Ryan Reynolds': ('M', 'W', 1937),
+    'Jennifer Lawrence': ('F', 'W',1990),
+    'Tom Cruise': ('M', 'W', 1962),
+    'Paul Walker': ('M', 'W', 1973),
+    'Tom Hardy': ('M', 'W', 1977),
+    'Emma Stone':('F', 'W', 1988),
+    'Liam Neeson': ('M', 'W', 1952),
+    'Aidan Turner': ('M', 'W', 1977),
+    'Michael Fassbender':('M', 'W', 1977),
+    'Henry Cavill': ('M', 'W', 1983),
+    'Eddie Marsan':('M', 'W', 1968),
+    'Scarlett Johansson': ('F', 'W', 1984),
+    'Judy Greer': ('F', 'W', 1975),
+    'Bryce Dallas Howard': ('F', 'W', 1981),
+    'Dominic Cooper':('M', 'W', 1978),
+    'James Franco':('M', 'W', 1978),
+    'Morgan Freeman': ('M', 'B', 1937),
+    'Edgar Ramírez':('M', 'H', 1977),
+    'Ray Winstone':('M', 'W', 1957),
+    'Charlize Theron': ('F', 'W', 1975),
+    'Steve Coogan': ('M', 'W', 1965),
+    'Kevin Dunn':('M', 'W', 1956),
+    'Rami Malek': ('M', 'W', 1981),
+    'William Hurt':('M', 'W', 1950),
+    'Alan Rickman': ('M', 'W', 1946),
+    'Sam Claflin':('M', 'W', 1986),
+    'Vin Diesel': ('M', 'W', 1967),
+    'Andrew Garfield': ('M', 'W', 1983),
+    'Alexander Skarsgård': ('M', 'W', 1976),
+    'Adam Brown':('M', 'W', 1980),
+    'Mila Kunis': ('F', 'W', 1983),
+    'Jon Favreau': ('M', 'W', 1966),
+    'Bruce Greenwood':('M', 'W', 1956),
+    'Anne Hathaway': ('F', 'W', 1982),
+    'Hayley Atwell':('F', 'W', 1982),
+    'James Nesbitt':('M', 'W', 1965)
 }
 
-#'movie_title' : ('actor_name')
-starpower_dup_dict = {
-    "Pirates of the Caribbean: At World's End": ('Johnny Depp', 1 ),
-    'Alice in Wonderland': ('Johnny Depp', 3 ),
-    'Pirates of the Caribbean: On Stranger Tides': ('Johnny Depp', 4),
-    'The Lone Ranger': ('Johnny Depp', 7 ),
-    'Alice Through the Looking Glass': ('Johnny Depp', 20),
-    'Spider-Man 3': ('J.K. Simmons', 79 ),
-    'Terminator Genisys': ('J.K. Simmons', 13 ),
-    'The Golden Compass': ('Christopher Lee',30 ),
-    'Hugo': ('Christopher Lee', 568),
-    'I Am Legend': ('Will Smith', 2),
-    'Hancock': ('Will Smith', 2), 
-    'Men in Black 3': ('Will Smith', 11),
-    'Suicide Squad': ('Will Smith', 83),
-    'Fantastic 4: Rise of the Silver Surfer': ('Chris Evans', 12),
-    'Captain America: The First Avenger': ('Chris Evans', 1),
-    'Captain America: The Winter Soldier': ('Chris Evans', 6),
-    'Captain America: Civil War': ('Chris Evans', 5),
-    'Ghost Rider': ('Nicolas Cage', 2), 
-    "The Sorcerer's Apprentice": ('Nicolas Cage', 15),
-    'The Chronicles of Narnia: Prince Caspian': ('Peter Dinklage', 549),
-    'X-Men: Days of Future Past': ('Peter Dinklage', 16),
-    'The Dark Knight': ('Christian Bale',1 ),
-    'Terminator Salvation': ('Christian Bale',3 ),
-    'The Dark Knight Rises': ('Christian Bale', 2),
-    'The Curious Case of Benjamin Button': ('Brad Pitt', 4), 
-    'World War Z': ('Brad Pitt', 7), 
-    'Iron Man': ('Robert Downey Jr.', 1),
-    'Tropic Thunder':('Robert Downey Jr.', 1),
-    'Iron Man 2': ('Robert Downey Jr.', 1),
-    'The Avengers': ('Robert Downey Jr.', 5),
-    'Iron Man 3': ('Robert Downey Jr.', 1),
-    'Avengers: Age of Ultron': ('Robert Downey Jr.', 47),
-    'Captain America: Civil War': ('Robert Downey Jr.', 10),
-    'Transformers: Revenge of the Fallen': ('Glenn Morshower', 849),
-    'Transformers: Dark of the Moon': ('Glenn Morshower', 1466),
-    '2012': ('Oliver Platt', 689),
-    'X-Men: First Class': ('Oliver Platt', 1031),
-    'G.I. Joe: The Rise of Cobra': ('Joseph Gordon-Levitt', 15),
-    'Inception': ('Joseph Gordon-Levitt', 6),
-    'The Dark Knight Rises': ('Joseph Gordon-Levitt', 3),
-    'Night at the Museum: Battle of the Smithsonian': ('Robin Williams', 71),
-    'Night at the Museum: Secret of the Tomb': ('Robin Williams', 1),
-    'X-Men Origins: Wolverine': ('Hugh Jackman', 2),
-    'X-Men: Days of Future Past': ('Hugh Jackman', 8),
-    'Pan': ('Hugh Jackman', 59),
-    'Star Trek': ('Chris Hemsworth', 17),
-    'Thor': ('Chris Hemsworth',1), 
-    'The Avengers': ('Chris Hemsworth', 1),
-    'Snow White and the Huntsman': ('Chris Hemsworth', 1),
-    'Avengers: Age of Ultron': ('Chris Hemsworth', 11),
-    'Iron Man': ('Jeff Bridges', 5),
-    'TRON: Legacy': ('Jeff Bridges', 4),
-    'Inception': ('Leonardo DiCaprio',2 ),
-    'The Revenant': ('Leonardo DiCaprio', 1),
-    'The Wolfman': ('Anthony Hopkins', 102),
-    'Thor': ('Anthony Hopkins', 102 ),
-    'X-Men Origins: Wolverine' : ('Ryan Reynolds', 5),
-    'Green Lantern': ('Ryan Reynolds', 4),
-    'X-Men: First Class': ('Jennifer Lawrence', 1),
-    'X-Men: Days of Future Past': ('Jennifer Lawrence', 1),
-    'The Hunger Games: Mockingjay - Part 2': ('Jennifer Lawrence',2),
-    'X-Men: Apocalypse': ('Jennifer Lawrence',7),
-    'Mission: Impossible - Ghost Protocol': ('Tom Cruise', 26),
-    'Edge of Tomorrow':('Tom Cruise', 21),
-    'Fast Five': ('Paul Walker', 7),
-    'Furious 7': ('Paul Walker', 1),
-    'Inception': ('Tom Hardy', 764),
-    'The Dark Knight Rises': ('Tom Hardy', 1),
-    'The Revenant' : ('Tom Hardy', 1),
-    'The Amazing Spider-Man': ('Emma Stone', 1),
-    'The Amazing Spider-Man 2': ('Emma Stone', 1),
-    'Battleship': ('Liam Neeson', 2),
-    'Wrath of the Titans':  ('Liam Neeson', 2),
-    'The Hobbit: An Unexpected Journey': ('Aiden Turner', 4317),
-    'The Hobbit: The Desolation of Smaug': ('Aiden Turner', 7614),
-    'X-Men: First Class': ('Michael Fassbender', 2 ),
-    'Prometheus': ('Michael Fassbender', 4),
-    'X-Men: Apocalypse': ('Michael Fassbender', 24),
-    'Man of Steel': ('Henry Cavill', 1),
-    'Batman v Superman: Dawn of Justice':('Henry Cavill', 2),
-    'Hancock': ('Eddie Marsan', 701 ),
-    'Jack the Giant Slayer': ('Eddie Marsan', 694),
-    'Iron Man 2': ('Scarlett Johansson', 2),
-    'The Avengers': ('Scarlett Johansson', 2),
-    'Captain America: The Winter Soldier': ('Scarlett Johansson', 1),
-    'Avengers: Age of Ultron': ('Scarlett Johansson', 4),
-    'Captain America: Civil War': ('Scarlett Johansson', 6),
-    'Dawn of the Planet of the Apes': ('Judy Greer', 36),
-    'Tomorrowland': ('Judy Greer', 27),
-    'Jurassic World': ('Judy Greer', 27),
-    'Ant-Man': ('Judy Greer', 27),
-    'Terminator Salvation' : ('Bryce Dallas Howard', 7),
-    'Jurassic World': ('Bryce Dallas Howard', 1),
-    'Captain America: The First Avenger': ('Dominic Cooper', 47),
-    'Warcraft': ('Dominic Cooper', 28),
-    'Spider-Man 3': ('James Franco', 4),
-    'Oz the Great and Powerful': ('James Franco', 2),
-    'Evan Almighty': ('Morgan Freeman', 20),
-    'The Dark Knight': ('Morgan Freeman', 3),
-    'The Bourne Ultimatum':('Edgar Ramírez', 324), 
-    'Wrath of the Titans': ('Edgar Ramírez', 246),
-    'Indiana Jones and the Kingdom of the Crystal Skull': ('Ray Winstone', 98),
-    'Hugo': ('Ray Winstone', 821),
-    'Hancock': ('Charlize Theron', 6),
-    'Prometheus': ('Charlize Theron', 2),
-    'Tropic Thunder': ('Steve Coogan', 44),
-    'Night at the Museum: Battle of the Smithsonian': ('Steve Coogan', 170),
-    'Night at the Museum: Secret of the Tomb': ('Steve Coogan', 667),
-    'Transformers': ('Kevin Dunn', 688),
-    'Transformers: Revenge of the Fallen': ('Kevin Dunn', 1087),
-    'Transformers: Dark of the Moon': ('Kevin Dunn', 1087),
-    'Night at the Museum: Battle of the Smithsonian': ('Rami Malek', 236),
-    'Night at the Museum: Secret of the Tomb': ('Rami Malek', 282),
-    'The Incredible Hulk': ('William Hurt', 50),
-    'Robin Hood': ('William Hurt', 191),
-    'Alice in Wonderland': ('Alan Rickman', 24),
-    'Alice Through the Looking Glass': ('Alan Rickman', 1),
-    'Pirates of the Caribbean: On Stranger Tides': ('Sam Claflin', 13),
-    'Snow White and the Huntsman': ('Sam Claflin', 6),
-    'Fast Five': ('Vin Diesel', 3),
-    'Guardians of the Galaxy': ('Vin Diesel', 42 ),
-    'Furious 7': ('Vin Diesel', 6),
-    'The Amazing Spider-Man': ('Andrew Garfield', 2),
-    'The Amazing Spider-Man 2': ('Andrew Garfield', 3),
-    'Battleship': ('Alexander Skarsgård', 34),
-    'The Legend of Tarzan': ('Alexander Skarsgård', 3),
-    'The Hobbit: An Unexpected Journey': ('Adam Brown', 193),
-    'The Hobbit: The Desolation of Smaug': ('Adam Brown', 754),
-    'Oz the Great and Powerful': ('Mila Kunis', 2),
-    'Jupiter Ascending': ('Mila Kunis', 6),
-    'Iron Man': ('Jon Favreau', 12),
-    'Iron Man 2': ('Jon Favreau', 18),
-    'Iron Man 3': ('Jon Favreau', 69),
-    'Star Trek': ('Bruce Greenwood', 23),
-    'Star Trek Into Darkness': ('Bruce Greenwood', 365),
-    'Alice in Wonderland': ('Anne Hathaway', 11),
-    'Interstellar': ('Anne Hathaway', 6),
-    'Alice Through the Looking Glass': ('Anne Hathaway', 97),
-    'Captain America: The First Avenger': ('Hayley Atwell',3),
-    'Captain America: The Winter Soldier': ('Hayley Atwell', 14),
-    'Ant-Man': ('Hayley Atwell', 1),
-    'The Hobbit: An Unexpected Journey': ('James Nesbitt', 73),
-    'The Hobbit: The Desolation of Smaug': ('James Nesbitt', 576),
-}
+#populate the diversity data from the dict to top_actors df
 
-test_df = top_actors.head(10)
-
-def get_gender(row):
+#function to find the actors diversity data according to row
+def get_combined_info(row, info_index):
     actor_list = [row['actor_1_name'], row['actor_2_name'], row['actor_3_name']]
-    genders = [dup_diversity_dict[actor][0] if actor in dup_diversity_dict else 'Unknown' for actor in actor_list]
-    return genders
+    info_list = []
+    for actor in actor_list:
+        if actor in diversity_dict:
+            info_list.append(diversity_dict[actor][info_index])
+        else:
+            info_list.append('Unknown')
+    return info_list
 
-def get_race(row):
-    actor_list = [row['actor_1_name'], row['actor_2_name'], row['actor_3_name']]
-    races = [dup_diversity_dict[actor][1] if actor in dup_diversity_dict else 'Unknown' for actor in actor_list]
-    return races
-
-def get_age(row):
-    actor_list = [row['actor_1_name'], row['actor_2_name'], row['actor_3_name']]
-    ages = [dup_diversity_dict[actor][2] if actor in dup_diversity_dict else 'Unknown' for actor in actor_list]
-    return ages
-
-#def get_starpower(row):
-#    actor_list = [row['actor_1_name'], row['actor_2_name'], row['actor_3_name']]
-#    starpowers = [test_diversity_dict[actor][3] if actor in test_diversity_dict else 'Unknown' for actor in actor_list]
-#    return starpowers
-
-test_df['genders'] = test_df.apply(get_gender, axis=1)
-test_df['race'] = test_df.apply(get_race, axis=1)
-test_df['birth_year'] = test_df.apply(get_age, axis=1)
-#test_df['starpower'] = test_df.apply(get_starpower, axis=1)
+#apply function to new columns in top_actors df
+top_actors['genders'] = top_actors.apply(lambda row: get_combined_info(row, 0), axis=1)
+top_actors['race'] = top_actors.apply(lambda row: get_combined_info(row, 1), axis=1)
+top_actors['birth_year'] = top_actors.apply(lambda row: get_combined_info(row, 2), axis=1)
 
 #display
-#print(test_df)
-
-#function to calculate age and put in a new column
-#top_actors['age_at_time_of_movie'] = top_actors.apply(lambda row: [movie - birth_year for movie, birth_year in zip(row['movie_title'], row['birth_year'])], axis=1)
-
-new_unique_starpower= {
-'Evan Almighty--Jimmy Bennett': 1002,
-'Wild Hogs--Jill Hennessy': 229,
-'Transformers--Zack Ward': 345171,
-'Rush Hour 3--Tzi Ma':1296,
-'The Bourne Ultimatum--Matt Damon':2,
-'Indiana Jones and the Kingdom of the Crystal Skull--Harrison Ford': 1,
-'The Incredible Hulk--Ty Burrell': 253,
-'The Mummy: Tomb of the Dragon Emperor--Jet Li':33,
-'Speed Racer--Scott Porter': 170,
-'Avatar--CCH Pounder': 17,
-'Angels & Demons--Tom Hanks':12,
-'Watchmen--Matt Frewer': 105,
-'Robin Hood--Mark Addy': 216,
-'Prince of Persia: The Sands of Time--Jake Gyllenhaal': 3,
-'The Chronicles of Narnia: The Voyage of the Dawn Treader--Bruce Spence': 2631,
-'The Last Airbender--Seychelle Gabriel': 25,
-'Hugo--Chloë Grace Moretz':16,
-'The Adventures of Tintin--Toby Jones': 224,
-'John Carter--Daryl Sabara': 775,
-'Oz the Great and Powerful--Tim Holmes': 272,
-'World War Z--Peter Capaldi': 2750,
-'Star Trek Into Darkness--Benedict Cumberbatch': 1,
-'Pacific Rim--Charlie Hunnam': 1,
-'47 Ronin--Keanu Reeves': 49,
-'Transformers: Age of Extinction--Bingbing Li': 150,
-'Maleficent--Angelina Jolie Pitt': 1,
-'Dawn of the Planet of the Apes--Gary Oldman': 182,
-'Guardians of the Galaxy--Bradley Cooper': 3,
-'Interstellar--Matthew McConaughey':3,
-'Furious 7--Jason Statham':22,
-'Jupiter Ascending--Channing Tatum':11,
-'Star Trek Beyond--Sofia Boutella':3,
-'The Legend of Tarzan--Christoph Waltz': 176,
-'Independence Day: Resurgence--Vivica A. Fox': 164,
-'Ghostbusters--Ed Begley Jr.': 2809,
-"Pirates of the Caribbean: At World's End--Orlando Bloom": 27,
-'The Golden Compass--Eva Green': 33,
-'Wild Hogs--Tichina Arnold': 4337,
-"Transformers--Michael O'Neill": 1872,
-'I Am Legend--Alice Braga': 66,
-'Rush Hour 3--Dana Ivey':5081,
-'Fantastic 4: Rise of the Silver Surfer--Ioan Gruffudd':32,
-'The Chronicles of Narnia: Prince Caspian--Pierfrancesco Favino':1587,
-'The Dark Knight--Heath Ledger':1,
-'The Curious Case of Benjamin Button--Jason Flemyng':407,
-'The Incredible Hulk--Peter Mensah':1498,
-'The Mummy: Tomb of the Dragon Emperor--Brendan Fraser': 10,
-'Speed Racer--Kick Gurry': 233,
-'Avatar--Joel David Moore': 19,
-'2012--Liam James':471,
-'G.I. Joe: The Rise of Cobra--Dennis Quaid':103,
-'Angels & Demons--Ayelet Zurer': 20,
-'Star Trek--Leonard Nimoy':173,
-'Watchmen--Billy Crudup': 4,
-'Prince of Persia: The Sands of Time--Richard Coyle':120,
-'TRON: Legacy--Olivia Wilde':420,
-'The Chronicles of Narnia: The Voyage of the Dawn Treader--Shane Rangi':4944,
-"The Sorcerer's Apprentice--Omar Benson Miller": 2596,
-'The Wolfman--Simon Merrells':2356,
-'The Last Airbender--Noah Ringer': 17,
-'Green Lantern--Temuera Morrison': 555,
-'Transformers: Dark of the Moon--Lester Speight': 1294,
-'Thor--Natalie Portman': 1,
-'Mission: Impossible - Ghost Protocol--Jeremy Renner': 16,
-'The Adventures of Tintin--Mackenzie Crook':4159,
-'John Carter--Samantha Morton':86,
-'Men in Black 3--Michael Stuhlbarg': 75,
-'Snow White and the Huntsman--Kristen Stewart': 6,
-'Man of Steel--Christopher Meloni':327,
-'The Lone Ranger--Ruth Wilson': 142,
-'Jack the Giant Slayer--Ewen Bremner': 1546,
-'Pacific Rim--Clifton Collins Jr.': 447,
-'47 Ronin--Cary-Hiroyuki Tagawa': 1963,
-'Transformers: Age of Extinction--Sophia Myles':301,
-'Maleficent--Sharlto Copley':58,
-'Edge of Tomorrow--Lara Pulver':552,
-'Tomorrowland--Chris Bauer':4263,
-'The Hunger Games: Mockingjay - Part 2--Philip Seymour Hoffman':62,
-'Terminator Genisys--Emilia Clarke':1,
-'Pan--Cara Delevingne':1,
-'Batman v Superman: Dawn of Justice--Lauren Cohan': 10,
-'Star Trek Beyond--Melissa Roxburgh':558,
-'Suicide Squad--Robin Atkin Downes':658,
-'Independence Day: Resurgence--Sela Ward': 80,
-'Warcraft--Callum Rennie':2605,
-'Ghostbusters--Kate McKinnon': 4,
-"Pirates of the Caribbean: At World's End--Jack Davenport":12,
-'Spider-Man 3--Kirsten Dunst':1,
-'The Golden Compass--Kristin Scott Thomas':410,
-'Evan Almighty--Steve Carell':20,
-'Wild Hogs--Drew Sidora':441,
-'I Am Legend--Willow Smith':50,
-'Rush Hour 3--Noémie Lenoir':57,
-'Fantastic 4: Rise of the Silver Surfer--Andre Braugher':1248,
-'The Bourne Ultimatum--Albert Finney':341,
-'The Chronicles of Narnia: Prince Caspian--Damián Alcázar':2151,
-'Indiana Jones and the Kingdom of the Crystal Skull--Jim Broadbent': 117,
-'The Curious Case of Benjamin Button--Julia Ormond':56,
-'The Mummy: Tomb of the Dragon Emperor--Russell Wong':706,
-'Speed Racer--Nicholas Elia': 805,
-'Tropic Thunder--Brandon T. Jackson': 115,
-'Avatar--Wes Studi':19,
-'Transformers: Revenge of the Fallen--Ramon Rodriguez':96,
-'Terminator Salvation--Common': 153,
-'2012--Tom McCarthy':609,
-'G.I. Joe: The Rise of Cobra--Leo Howard':132,
-'X-Men Origins: Wolverine--Dominic Monaghan': 22,
-'Angels & Demons--Armin Mueller-Stahl': 451,
-'Watchmen--Stephen McHattie': 899673,
-'Robin Hood--Scott Grimes':151,
-'Prince of Persia: The Sands of Time--Reece Ritchie':698,
-'TRON: Legacy--James Frain':90,
-'The Chronicles of Narnia: The Voyage of the Dawn Treader--Laura Brent': 2380,
-"The Sorcerer's Apprentice--Robert Capron":2399,
-'The Wolfman--Art Malik': 2565,
-'The Last Airbender--Aasif Mandvi':210,
-'Pirates of the Caribbean: On Stranger Tides--Stephen Graham': 404,
-'Green Lantern--Taika Waititi':2352,
-'Mission: Impossible - Ghost Protocol--Michael Nyqvist':195,
-'The Adventures of Tintin--Tony Curran':1244,
-'Fast Five--Dwayne Johnson':6,
-'John Carter--Polly Walker':82,
-'The Amazing Spider-Man--Chris Zylka':191,
-'Men in Black 3--Nicole Scherzinger':126,
-'Battleship--Tadanobu Asano':837,
-'Wrath of the Titans--Lily James':1206,
-'Prometheus--Sean Harris':168,
-'Man of Steel--Harry Lennix':1067,
-'The Lone Ranger--Tom Wilkinson':1201,
-'Iron Man 3--Don Cheadle':148,
-'Jack the Giant Slayer--Ralph Brown':2506,
-'World War Z--Mireille Enos':28,
-'Star Trek Into Darkness--Noel Clarke':726,
-'Pacific Rim--Larry Joe Campbell':3673,
-'47 Ronin--Jin Akanishi':3114,
-'Transformers: Age of Extinction--Kelsey Grammer':620,
-'The Amazing Spider-Man 2--B.J. Novak':1569,
-'Maleficent--Sam Riley':66,
-'Edge of Tomorrow--Noah Taylor':611,
-'Dawn of the Planet of the Apes--Kodi Smit-McPhee':233,
-'Guardians of the Galaxy--Djimon Hounsou':301,
-'Interstellar--Mackenzie Foy':7,
-'Tomorrowland--Thomas Robinson':1117,
-'Jupiter Ascending--Eddie Redmayne':3,
-'The Hunger Games: Mockingjay - Part 2--Josh Hutcherson':24,
-'Terminator Genisys--Matt Smith':363,
-'Jurassic World--Omar Sy':445,
-'Pan--Nonso Anozie':932,
-'The Revenant--Lukas Haas':858,
-'Ant-Man--T.I.':1124,
-'Batman v Superman: Dawn of Justice--Alan D. Purwin':21538,
-'Star Trek Beyond--Lydia Wilson':91,
-'The Legend of Tarzan--Casper Crump':1579,
-'X-Men: Apocalypse--Tye Sheridan':66,
-'Suicide Squad--Ike Barinholtz':97,
-'Independence Day: Resurgence--Judd Hirsch':825,
-'Warcraft--Ruth Negga':825,
-'Ghostbusters--Zach Woods':560,
-}
+print(top_actors.head())
