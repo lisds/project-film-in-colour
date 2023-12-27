@@ -8,8 +8,7 @@ import matplotlib.pyplot as plt
 
 
 #READ THE DATA
-df = pd.read_csv("C:/Users/Summe/Documents/dsip-work/film-in-colour/project-film-in-colour/movie_metadata.csv")
-
+df = pd.read_csv("data/movie_metadata.csv")
 
 #START REPLICATION
 #creating a new filtered df with only the years 2006-2017
