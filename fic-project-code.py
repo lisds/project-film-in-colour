@@ -5,6 +5,9 @@ pd.set_option('display.max_rows', 100)
 pd.set_option('mode.copy_on_write', True)
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns 
+import statsmodels.api as sm
+from scipy.stats import pearsonr
 
 
 #READ THE DATA
@@ -856,3 +859,69 @@ merged_df.drop(columns=['movie_name'], inplace=True)
 # Apply a lambda function to create the 'highest_starpower' column
 merged_df['highest_starpower'] = merged_df['starpower_value'].apply(lambda values: min(values))
 
+#start analysis
+
+#create a df with only necessary data for analysis
+analysis_df = merged_df[[
+    'white_proportion',
+    'female_proportion',
+    'average_age',
+    'attendance',
+    'highest_starpower',
+    'gross',
+    'budget',
+    'content_rating (Dummy)_PG',
+    'content_rating (Dummy)_PG-13',
+    'content_rating (Dummy)_R',
+    'genre_comedy (Dummy)',
+    'genre_action (Dummy)',
+    'genre_drama (Dummy)',
+    'genre_other (Dummy)'
+]]
+#overview
+
+#calculate summary statistics
+summary_stats = analysis_df.describe()
+
+#pairplot
+full_analysis_pairplot = sns.pairplot(analysis_df)
+
+#correlation matrix
+correlation_matrix = analysis_df.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.savefig('images/correlation_plot.png')
+
+
+#investigating white proportion
+
+#white pairplot
+white_pairplot = sns.pairplot(analysis_df, hue = 'white_proportion')
+
+#white regplot with gross revenue
+sns.regplot(x='white_proportion', y='gross', data=analysis_df)
+plt.savefig('images/white_regplot.png')
+
+#correlation coefficient white proportion and gross
+white_correlation_coefficient, white_p_value = pearsonr(analysis_df['white_proportion'], analysis_df['gross'])
+print(f"White Pearson Correlation Coefficient: {white_correlation_coefficient:.2f}, p-value: {white_p_value:.4f}")
+
+#boxplots to see errors
+sns.boxplot(x='white_proportion', y='gross', data=analysis_df)
+plt.savefig('images/white_boxplot.png')
+
+#investigating female proportion
+
+#female pairplot
+female_pairplot = sns.pairplot(analysis_df, hue = 'female_proportion')
+
+#female regplot with gross revenue
+sns.regplot(x='female_proportion', y='gross', data=analysis_df)
+plt.savefig('images/female_regplot.png')
+
+#correlation coefficient female proportion and gross
+female_correlation_coefficient, female_p_value = pearsonr(analysis_df['female_proportion'], analysis_df['gross'])
+print(f"Female Pearson Correlation Coefficient: {female_correlation_coefficient:.2f}, p-value: {female_p_value:.4f}")
+
+#boxplots to see errors
+sns.boxplot(x='female_proportion', y='gross', data=analysis_df)
+plt.savefig('images/female_boxplot.png')
