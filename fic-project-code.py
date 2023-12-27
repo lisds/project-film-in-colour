@@ -432,5 +432,56 @@ top_actors['genders'] = top_actors.apply(lambda row: get_combined_info(row, 0), 
 top_actors['race'] = top_actors.apply(lambda row: get_combined_info(row, 1), axis=1)
 top_actors['birth_year'] = top_actors.apply(lambda row: get_combined_info(row, 2), axis=1)
 
-#display
-print(top_actors.head())
+
+#convert gender and race to proportions
+
+#Convert gender into numeric proportion
+genders_column = top_actors['genders'] #Only male or female
+
+#The female proportion of actors is calculated as the number of 'F' in each movie divided by three.
+Fproportions = top_actors.genders.apply(lambda cast: cast.count('F') / 3)
+
+#put proportions into a new column
+top_actors['female_proportion'] = Fproportions
+
+#calculate race proportion using similar lambda function
+Wproportions = top_actors.race.apply(lambda cast: cast.count('W')/3)
+
+#put proportions into a new column
+top_actors['white_proportion'] = Wproportions
+
+#Calculate age at the time of movie then average age
+
+#function to calculate age at time of movie
+def calculate_age(row):
+    return [row['title_year'] - year for year in row['birth_year']]
+
+#apply calculate_age to new column
+top_actors['age_at_time_of_movie'] = top_actors.apply(calculate_age, axis=1)
+
+#convert from float to int
+top_actors['age_at_time_of_movie'] = top_actors['age_at_time_of_movie'].apply(lambda x: [int(age) for age in x])
+
+# Apply a lambda function to create the 'average_age' column
+top_actors['average_age'] = top_actors['age_at_time_of_movie'].apply(lambda age_list: sum(age_list) / len(age_list) )
+
+#calculate attendance from average ticket price
+
+av_ticket_price = {
+    2017: 8.97,
+    2016: 8.65,
+    2015: 8.43,
+    2014: 8.17,
+    2013: 8.13,
+    2012: 7.96,
+    2011: 7.93,
+    2010: 7.89,
+    2009: 7.50,
+    2008: 7.18,
+    2007: 6.88,
+    2006: 6.55 }
+
+
+top_actors['attendance'] = top_actors['title_year'].map(av_ticket_price)
+top_actors['attendance'] = top_actors['budget'] / top_actors['attendance']
+
