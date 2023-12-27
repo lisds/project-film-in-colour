@@ -1,6 +1,27 @@
-# DSIP template repository
+# Film in Colour
 
-To set up builds for this report, run this command in the root directory of this repository (the directory containing this `README.md` file):
+This project explores the impact of top cast member diversity on Hollywood film box office performance, aiming to replicate the findings of Xing Fan's (2021) master's thesis and conducting additional analyses.
+
+### Intro paragraph here
+
+BLAH BLAH BLAH
+
+
+### Installation instructions for user
+
+
+### Installation instructions for contributors
+
+- where to find paper
+- where to download data
+
+### Expectations from contributors
+
+
+### List of known issues
+
+
+### ALL OF THE STUFF BELOW ARE MATTS TEMPLATE - WILL DELETE
 
 ```bash
 pip3 install -r build_requirements.txt
