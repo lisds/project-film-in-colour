@@ -1,6 +1,6 @@
 # Film in Colour
 
-This project explores the impact of top cast member diversity on Hollywood movie box office performance, aiming to replicate the findings of Xing Fan's (2021) master's thesis and conducting additional analyses.
+This project explores the impact of the leading cast's diversity on Hollywood movie box office performance, aiming to replicate the findings of Xing Fan's (2021) master's thesis and conducting additional analyses.
 
 ### Introduction
 
