@@ -17,7 +17,7 @@ Specifically, this project investigates:
 ### Process - need to do
 - add notes on process
 
-### Installation instructions for user - need to do
+### Installation instructions for user 
 - words
 - bash
 
@@ -45,27 +45,3 @@ Moore, E. E., & Coleman, C. (2015). Starving for diversity: Ideological implicat
 
 Roxborough, S. (2016). America’s TV Exports Too Diverse for Overseas. [online] Available at: http://www.hollywoodreporter.com/news/americas-tv-exports-diverse-overseas-879109 (Accessed: 27/12/2023)
 
-
-
-
-### ALL OF THE STUFF BELOW ARE MATTS TEMPLATE - WILL DELETE
-
-```bash
-pip3 install -r build_requirements.txt
-```
-
-This will install all the prerequisites.
-
-To fetch the data, run:
-
-```bash
-python3 fetch_data.py
-```
-
-To build the book, run:
-
-```
-jupyter-book build .
-```
-
-The book build appears in the `_build/html` directory.  You can open it with your browser.
