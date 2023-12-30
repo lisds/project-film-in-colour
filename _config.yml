@@ -1,8 +1,8 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: My sample book
-author: The Jupyter Book Community
+title: Diversity on Screen: Unraveling the Impact of Minority Representation in Film on Consumer Attitudes and Industry Practices
+author: Lucy Adeniji & Summer Lowe
 logo: logo.png
 
 execute:
@@ -27,7 +27,7 @@ bibtex_bibfiles:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/lisds/dsip-project-template  # Online location of your book
+  url: https://github.com/lisds/project-film-in-colour  # Online location of your book
   branch: main  # Which branch of the repository should be used when creating links (optional)
 
 launch_buttons:
