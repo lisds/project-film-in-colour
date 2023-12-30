@@ -4,7 +4,8 @@
 from projtools import projcode
 
 
-def test_myfunc():
-    assert projcode.my_func(1, 1) == 11
-    assert projcode.my_func(0, 1) == 1
-    assert projcode.my_func(5, 0) == 50
+assert starpower_dict_nan_count == 0
+
+assert not any(top_actors['genders'].astype(str).eq('Unknown'))
+assert not any(top_actors['race'].astype(str).eq('Unknown'))
+assert not any(top_actors['birth_year'].astype(str).eq('Unknown'))
