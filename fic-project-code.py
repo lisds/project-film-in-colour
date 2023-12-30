@@ -925,3 +925,7 @@ print(f"Female Pearson Correlation Coefficient: {female_correlation_coefficient:
 #boxplots to see errors
 sns.boxplot(x='female_proportion', y='gross', data=analysis_df)
 plt.savefig('images/female_boxplot.png')
+
+
+
+
