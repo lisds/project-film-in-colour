@@ -1,11 +1,33 @@
+---
+jupyter:
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  language_info:
+    codemirror_mode:
+      name: ipython
+      version: 3
+    file_extension: .py
+    mimetype: text/x-python
+    name: python
+    nbconvert_exporter: python
+    pygments_lexer: ipython3
+    version: 3.11.6
+  nbformat: 4
+  nbformat_minor: 5
+---
+
+::: {#659cea11-9e1f-407b-b820-4e39aae4e2d4 .cell .markdown}
 # Project Film in Colour
 
 ## Replication Results
 
 #### Read the data
+:::
 
-
-```python
+::: {#c0ee9e84-263d-45f5-8584-40e1972c9cd4 .cell .code execution_count="1"}
+``` python
 #IMPORT LIBRARIES
 
 import pandas as pd
@@ -23,6 +45,7 @@ clean_df = pd.read_csv("data/clean_data.csv")
 clean_df.head()
 ```
 
+::: {.output .stream .stdout}
     Requirement already satisfied: statsmodels in /opt/conda/lib/python3.11/site-packages (0.14.0)
     Requirement already satisfied: numpy>=1.18 in /opt/conda/lib/python3.11/site-packages (from statsmodels) (1.26.2)
     Requirement already satisfied: scipy!=1.9.2,>=1.4 in /opt/conda/lib/python3.11/site-packages (from statsmodels) (1.11.3)
@@ -33,11 +56,10 @@ clean_df.head()
     Requirement already satisfied: pytz>=2020.1 in /opt/conda/lib/python3.11/site-packages (from pandas>=1.0->statsmodels) (2023.3.post1)
     Requirement already satisfied: tzdata>=2022.1 in /opt/conda/lib/python3.11/site-packages (from pandas>=1.0->statsmodels) (2023.3)
     Requirement already satisfied: six in /opt/conda/lib/python3.11/site-packages (from patsy>=0.5.2->statsmodels) (1.16.0)
+:::
 
-
-
-
-
+::: {.output .execute_result execution_count="1"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -155,24 +177,26 @@ clean_df.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#2df8f564-0069-4078-9909-4b49b18c6b04 .cell .markdown}
 ### Replicating Data Analysis: Ordinary Least Squared (OLS) Regression including Control Function
 
 First, investigate the data for any stand-out statistics
 
 #### Summary Statistics
+:::
 
-
-```python
+::: {#94304377-a8f9-438c-9b99-d89e0ec2f9e5 .cell .code execution_count="2"}
+``` python
 data_cleaned_summary_stats = clean_df.describe()
 data_cleaned_summary_stats
 ```
 
-
-
-
+::: {.output .execute_result execution_count="2"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -311,15 +335,20 @@ data_cleaned_summary_stats
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
+::: {#8637c749-55b5-484b-9e26-15d38d959b5f .cell .markdown}
+**Explanation:**
+:::
 
-
-**Explanation:** 
-
+::: {#4b3c3675-e9bf-4dd4-82c5-4ab2bfa9e823 .cell .markdown}
 #### Correlation Matrix
+:::
 
-
-```python
+::: {#541d129a-404d-4694-ba56-914c51e841e7 .cell .code execution_count="3"}
+``` python
 #identifying initial correlations
 correlation_matrix = clean_df.corr()
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
@@ -329,24 +358,28 @@ plt.show()
 plt.savefig('images/correlation_plot.png')
 ```
 
+::: {.output .display_data}
+![](vertopal_d61a7aab422742e98029d8779527357b/a9b37957663bc1e22075fc7686336f2ff151bf92.png)
+:::
 
-    
-![png](output_6_0.png)
-    
-
-
-
+::: {.output .display_data}
     <Figure size 640x480 with 0 Axes>
+:::
+:::
 
+::: {#eb00c80e-b281-49b9-bc00-f13fc747f110 .cell .markdown}
+**Explanation:** There are no strong correlations either positive or
+negative
+:::
 
-**Explanation:** There are no strong correlations either positive or negative
-
+::: {#50d7cb01-754f-4a7d-be6d-92b3b6730bbe .cell .markdown}
 ### Pairplots
 
 #### White proportion and attendance
+:::
 
-
-```python
+::: {#f28351d7-b2dc-4265-b518-d784891f3ee9 .cell .code execution_count="4"}
+``` python
 pairplot_data = clean_df[['white_proportion', 'attendance_in_mills']]
 
 # Create a pairplot
@@ -357,20 +390,21 @@ plt.show()
 plt.savefig('images/white_pairplot.png')
 ```
 
+::: {.output .display_data}
+![](vertopal_d61a7aab422742e98029d8779527357b/dda880b381df13f8177762627caa963b46940945.png)
+:::
 
-    
-![png](output_9_0.png)
-    
-
-
-
+::: {.output .display_data}
     <Figure size 640x480 with 0 Axes>
+:::
+:::
 
-
+::: {#c3327d30-8551-4cb8-91c8-b3715603f3a8 .cell .markdown}
 #### Female proportion and attendance
+:::
 
-
-```python
+::: {#4ccc742a-24b9-4f11-803b-b6f0fde73f8f .cell .code execution_count="5"}
+``` python
 pairplot_data = clean_df[['female_proportion', 'attendance_in_mills']]
 
 # Create a pairplot
@@ -381,22 +415,23 @@ plt.show()
 plt.savefig('images/female_pairplot.png')
 ```
 
+::: {.output .display_data}
+![](vertopal_d61a7aab422742e98029d8779527357b/be1e63823366408703202ebc577b91aab751c244.png)
+:::
 
-    
-![png](output_11_0.png)
-    
-
-
-
+::: {.output .display_data}
     <Figure size 640x480 with 0 Axes>
+:::
+:::
 
-
+::: {#b446d98f-77fc-4bf5-a415-1fddddc0dd14 .cell .markdown}
 ## OLS Regression
 
 ### Standardising results for comparability
+:::
 
-
-```python
+::: {#4a2d1dfc-23bf-493e-8368-8f8583c8177c .cell .code execution_count="6"}
+``` python
 from sklearn.preprocessing import StandardScaler
 # Create a scaler object
 scaler = StandardScaler()
@@ -421,9 +456,10 @@ columns_to_standardize = ['white_proportion',
 # Standardize these columns
 clean_df[columns_to_standardize] = scaler.fit_transform(clean_df[columns_to_standardize])
 ```
+:::
 
-
-```python
+::: {#a861cc96-c6e5-4a0a-a49c-ae9cc43ff1a6 .cell .code execution_count="7"}
+``` python
 from sklearn.preprocessing import StandardScaler
 # Create a scaler object
 scaler = StandardScaler()
@@ -448,9 +484,10 @@ columns_to_standardize = ['white_proportion',
 # Standardize these columns
 clean_df[columns_to_standardize] = scaler.fit_transform(clean_df[columns_to_standardize])
 ```
+:::
 
-
-```python
+::: {#745c3e97-7846-43c5-b71d-f7b3834081e8 .cell .code execution_count="8"}
+``` python
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.linear_model import LinearRegression
 
@@ -492,44 +529,51 @@ ax.set_zlabel('Attendance in Millions')
 ax.set_title('3D Regression Plot')
 
 plt.show()
-
 ```
 
+::: {.output .display_data}
+![](vertopal_d61a7aab422742e98029d8779527357b/da950b9ad36d92b1933fec67375c81ae0012a6ba.png)
+:::
+:::
 
-    
-![png](output_15_0.png)
-    
-
-
+::: {#fb7a80d3-4594-4181-a658-1cb8c6664ff6 .cell .markdown}
 #### H2: White Proportion
 
-Fang White_P Coef: (β = -0.6342, p = 0.0433) WhiteProportion has a statistically significant negative effect on LnAttendance, which indicates that low racial diversity in leading acting roles will damage movie market sales. 
+Fang White_P Coef: (β = -0.6342, p = 0.0433) WhiteProportion has a
+statistically significant negative effect on LnAttendance, which
+indicates that low racial diversity in leading acting roles will damage
+movie market sales.
 
 Our White_P Coef : (β = 1.89, p = 0.687
 
 #### H4: Female Proportion
 
-Fang Female_P Coef: (β = -2.2104, p = 0.0030) FemaleProportion has a statistically significant negative effect (β = -2.2104, p = 0.0030) on LnAttendance.
+Fang Female_P Coef: (β = -2.2104, p = 0.0030) FemaleProportion has a
+statistically significant negative effect (β = -2.2104, p = 0.0030) on
+LnAttendance.
 
 Our Female_P Coef: (β = 7.69, p = 0.440)
 
-#### H5: White*Female Proportion
+#### H5: White\*Female Proportion
 
-Fang: (β = 2.6801, p = 0.0017) of the two-way interaction term on LnAttendance.
+Fang: (β = 2.6801, p = 0.0017) of the two-way interaction term on
+LnAttendance.
 
-Our White*Female interaction coef: (β = -9.32, p = 0.351)
-
+Our White\*Female interaction coef: (β = -9.32, p = 0.351)
 
 #### Comparing Results
 
-There is significant divergence from Fangs results and ou results for each coefficient. We predict this is as a result of our smaller sample size. We will implement a bootstrapping procedure to assess the variability and robustness of the Ordinary Least Squares (OLS) regression coefficients. 
-
+There is significant divergence from Fangs results and ou results for
+each coefficient. We predict this is as a result of our smaller sample
+size. We will implement a bootstrapping procedure to assess the
+variability and robustness of the Ordinary Least Squares (OLS)
+regression coefficients.
 
 ### Bootstrapping to assess coefficient variance for our sample
+:::
 
-
-
-```python
+::: {#a748b459-0cc9-49e1-9465-967c51ea788b .cell .code execution_count="9"}
+``` python
 n_bootstrap = 1000
 n_coefficients = 4  # Adjust based on the number of predictors + 1 for the intercept
 bootstrapped_coefs = np.zeros((n_bootstrap, n_coefficients))
@@ -554,12 +598,14 @@ print(mean_coefs)
 print(std_coefs)
 ```
 
+::: {.output .stream .stdout}
     [26.12719072  0.25716368 -1.14677957 -2.23122629]
     [1.75732041 2.39424879 1.7331912  1.66897813]
+:::
+:::
 
-
-
-```python
+::: {#6492ada6-5078-49cb-aaf7-cfb7ef64563b .cell .code execution_count="10"}
+``` python
 coef_labels = ['Intercept', 'White_P Coefficient','Female_P Coefficient','White*Female_P Coefficient']
 plt.figure(figsize=(10, 6))
 sns.boxplot(data=pd.DataFrame(bootstrapped_coefs, columns=coef_labels))
@@ -568,52 +614,70 @@ plt.ylabel('Coefficient Value')
 plt.show()
 ```
 
+::: {.output .display_data}
+![](vertopal_d61a7aab422742e98029d8779527357b/7dc7bb82d2aafbe6cb5fd3d1964654e765e546b7.png)
+:::
+:::
 
-    
-![png](output_18_0.png)
-    
-
-
+::: {#0b6a74ec-4095-4e2e-bae8-58b22ad6fe43 .cell .markdown}
 ## Limitations
 
-- We used a sample size 1/3 the size of Xing Fan's
-- Difficult to interpret the 'control function' methodology used by Xing Fan
-- The term race is relatively ambigious and should be defined better
-- Due to scope, we could not ontrol for all control variables stated in the paper
-- Our results are quite different to Xing Fan's, so we cannot be confident in our attempt to replicate despite limitations
-
+-   We used a sample size 1/3 the size of Xing Fan\'s
+-   Difficult to interpret the \'control function\' methodology used by
+    Xing Fan
+-   The term race is relatively ambigious and should be defined better
+-   Due to scope, we could not ontrol for all control variables stated
+    in the paper
+-   Our results are quite different to Xing Fan\'s, so we cannot be
+    confident in our attempt to replicate despite limitations
 
 ## Conclusions
+:::
 
-In our replication study, we attempted to validate the findings of Fang's research on the impact of racial and gender diversity in leading acting roles on movie market sales. Our results, however, showed significant deviations from Fang's original findings.
+::: {#50eac4e8-83bf-45af-ad98-6110b6dac8c3 .cell .markdown}
+In our replication study, we attempted to validate the findings of
+Fang\'s research on the impact of racial and gender diversity in leading
+acting roles on movie market sales. Our results, however, showed
+significant deviations from Fang\'s original findings.
 
-H2: White Proportion Fang's study found a statistically significant negative effect of White Proportion on LnAttendance (β = -0.6342, p = 0.0433), suggesting that lower racial diversity in leading roles negatively impacts movie market sales. Contrarily, our replication yielded a positive coefficient (β = 1.89) but with a non-significant p-value (p = 0.687), indicating a lack of statistical evidence to support the same conclusion.
+H2: White Proportion Fang\'s study found a statistically significant
+negative effect of White Proportion on LnAttendance (β = -0.6342, p =
+0.0433), suggesting that lower racial diversity in leading roles
+negatively impacts movie market sales. Contrarily, our replication
+yielded a positive coefficient (β = 1.89) but with a non-significant
+p-value (p = 0.687), indicating a lack of statistical evidence to
+support the same conclusion.
 
-4Female Proportion In Fang's study, Female Proportion also had a significant negative effect on LnAttendance (β = -2.2104, p = 0.0030). Our study, however, showed a large positive coefficient (β = 7.69) but again, without statistical significance (p = 0.440).
+4Female Proportion In Fang\'s study, Female Proportion also had a
+significant negative effect on LnAttendance (β = -2.2104, p = 0.0030).
+Our study, however, showed a large positive coefficient (β = 7.69) but
+again, without statistical significance (p = 0.440).
 
-In Fang's study, Female Proportion also had a significant negative effect on LnAttendance (β = -2.2104, p = 0.0030). Our study, however, showed a large positive coefficient (β = 7.69) but again, without statistical significance (p = 0.440).
+In Fang\'s study, Female Proportion also had a significant negative
+effect on LnAttendance (β = -2.2104, p = 0.0030). Our study, however,
+showed a large positive coefficient (β = 7.69) but again, without
+statistical significance (p = 0.440).
 
-H5: White*Female Proportion Interaction Fang reported a significant positive effect (β = 2.6801, p = 0.0017) of the interaction term on LnAttendance. Our findings were contrary, indicating a negative interaction effect (β = -9.32), but with a non-significant p-value (p = 0.351).
+H5: White\*Female Proportion Interaction Fang reported a significant
+positive effect (β = 2.6801, p = 0.0017) of the interaction term on
+LnAttendance. Our findings were contrary, indicating a negative
+interaction effect (β = -9.32), but with a non-significant p-value (p =
+0.351).
 
+To address these discrepancies and better understand the robustness of
+our findings, we implemented a bootstrapping procedure. We found very
+high variance for our coefficents (σ = 2.58 , 5.04, 4.74) This allowed
+us to explain the variability and stability of the OLS regression
+coefficients.
 
+The notable discrepancies between Fang\'s results and ours, particularly
+in the direction and significance of the coefficients, may be attributed
+to our smaller sample size. This limitation underscores the potential
+influence of sample size on the reliability and generalizability of
+study outcomes.
+:::
 
-
-To address these discrepancies and better understand the robustness of our findings, we implemented a bootstrapping procedure. We found very high variance for our coefficents (σ = 2.58 , 5.04, 4.74)  This allowed us to explain the variability and stability of the OLS regression coefficients.
-
-
-
-The notable discrepancies between Fang's results and ours, particularly in the direction and significance of the coefficients, may be attributed to our smaller sample size. This limitation underscores the potential influence of sample size on the reliability and generalizability of study outcomes.
-
-
-
-
-
-
-
-
-
-
-
-```python
-
+::: {#8a8fe0bf-b4b3-493e-a372-e7d8ca39bf48 .cell .code}
+``` python
 ```
+:::

@@ -1,45 +1,120 @@
+---
+jupyter:
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  language_info:
+    codemirror_mode:
+      name: ipython
+      version: 3
+    file_extension: .py
+    mimetype: text/x-python
+    name: python
+    nbconvert_exporter: python
+    pygments_lexer: ipython3
+    version: 3.11.6
+  nbformat: 4
+  nbformat_minor: 5
+---
+
+::: {#c046e8a3-42d0-43c1-a42e-df1ec988d7f4 .cell .markdown}
 # Project Film in Colour
 
 ## Diversity on Screen: Unraveling the Impact of Minority Representation in Film on Consumer Attitudes and Industry Practices
 
 ### Introduction
 
-Research consistently shows that minorities, including racial and ethnic groups, women, and disabled groups, are underrepresented in the film industry (Iasiello, 2017; Eschholz, 2002; Karniouchina, 2023). This underrepresentation is evident in both leading roles and directorial positions, where employers often attribute the root of bias to consumer attitudes rather than organizational practices, explained by individual preference for racial and ethnic similarity within networks, as well as systemic issues such as lack of opportunities and outcomes for women and racial/ethnic minorities (Iasiello, 2017; Iasiello, 2020; Erigha, 2015). 
+Research consistently shows that minorities, including racial and ethnic
+groups, women, and disabled groups, are underrepresented in the film
+industry (Iasiello, 2017; Eschholz, 2002; Karniouchina, 2023). This
+underrepresentation is evident in both leading roles and directorial
+positions, where employers often attribute the root of bias to consumer
+attitudes rather than organizational practices, explained by individual
+preference for racial and ethnic similarity within networks, as well as
+systemic issues such as lack of opportunities and outcomes for women and
+racial/ethnic minorities (Iasiello, 2017; Iasiello, 2020; Erigha, 2015).
 
-This underrepresentation carries substantial social and economic implications, potentially perpetuating discrimination and harmful stereotypes. It restricts the range of narratives available to society about diverse groups, thereby shaping perceptions over time. The empirical challenge of testing the influence and scope of consumer racial attitudes on purchasing decisions has constrained prior efforts to disentangle managerial bias from consumer bias (Kuppaswamy, 2018).
+This underrepresentation carries substantial social and economic
+implications, potentially perpetuating discrimination and harmful
+stereotypes. It restricts the range of narratives available to society
+about diverse groups, thereby shaping perceptions over time. The
+empirical challenge of testing the influence and scope of consumer
+racial attitudes on purchasing decisions has constrained prior efforts
+to disentangle managerial bias from consumer bias (Kuppaswamy, 2018).
 
-In this study, we expand upon research regarding consumer reactions to workforce diversity in the film industry, utilizing an intersectional data analysis approach. We replicate and build upon Xi Fang's 2021 study from The University of Guelph, which evaluated U.S. film performance in relation to race and gender diversity of casts (Fang, 2021). Our work further investigates the impact of diversity on viewing hours on Netflix. Moreover, we explore consumer discrimination nuances by examining the variability of responses to main cast diversity across different movie genres, using mixed effects modeling. This approach broadens our understanding of the social contexts in which consumer discrimination operates.
+In this study, we expand upon research regarding consumer reactions to
+workforce diversity in the film industry, utilizing an intersectional
+data analysis approach. We replicate and build upon Xi Fang\'s 2021
+study from The University of Guelph, which evaluated U.S. film
+performance in relation to race and gender diversity of casts (Fang,
+2021). Our work further investigates the impact of diversity on viewing
+hours on Netflix. Moreover, we explore consumer discrimination nuances
+by examining the variability of responses to main cast diversity across
+different movie genres, using mixed effects modeling. This approach
+broadens our understanding of the social contexts in which consumer
+discrimination operates.
 
 ## Replication Process
 
-Fang used the Ordinary Least Squared (OLS) Linear Regression technique utilizing a control function, which separately models all control variables, to explore five different hypotheses within his research, (see below), his results rejected all null hypotheses.  
+Fang used the Ordinary Least Squared (OLS) Linear Regression technique
+utilizing a control function, which separately models all control
+variables, to explore five different hypotheses within his research,
+(see below), his results rejected all null hypotheses.
 
-- **H1:** The ratio of White actors in movie leading cast is positively related to the movie budget.
-- **H2:** The movie market performance is negatively related to the ratio of White actors in the movie leading cast.
-- **H3:** The ratio of women in the movie leading cast is negatively related to the average age of the leading cast.
-- **H4:** The movie market performance is negatively related to the ratio of female actors in the movie leading cast.
-- **H5:** The interaction of the ratio of actors from different ethnicities and the ratio of women has a significant impact on movie market performance.
+-   **H1:** The ratio of White actors in movie leading cast is
+    positively related to the movie budget.
+-   **H2:** The movie market performance is negatively related to the
+    ratio of White actors in the movie leading cast.
+-   **H3:** The ratio of women in the movie leading cast is negatively
+    related to the average age of the leading cast.
+-   **H4:** The movie market performance is negatively related to the
+    ratio of female actors in the movie leading cast.
+-   **H5:** The interaction of the ratio of actors from different
+    ethnicities and the ratio of women has a significant impact on movie
+    market performance.
 
 ![All Hypotheses](images/all_hypotheses.png)
 
-**Given the unsurprising implications of H1 and H3, we chose to explore the direct effects of the leading cast's diversity on movie market performance, H2, H4, and H5.**
+**Given the unsurprising implications of H1 and H3, we chose to explore
+the direct effects of the leading cast\'s diversity on movie market
+performance, H2, H4, and H5.**
 
 ### Data Replication
 
-**Movie Data:** Fang used the IMDB 5000 dataset from the Kaggle website. It contains 28 variables for the top-rated 5043 movies, spanning across 100 years in 66 countries for the year 2007-2016. He used the gross values from this dataset to calculate attendance by dividing gross revenue by average ticket price in each year, using U.S. average movie ticket price data from 2007 to 2016 in Statista (https://www.statista.com).
+**Movie Data:** Fang used the IMDB 5000 dataset from the Kaggle website.
+It contains 28 variables for the top-rated 5043 movies, spanning across
+100 years in 66 countries for the year 2007-2016. He used the gross
+values from this dataset to calculate attendance by dividing gross
+revenue by average ticket price in each year, using U.S. average movie
+ticket price data from 2007 to 2016 in Statista
+(<https://www.statista.com>).
 
-**Demographic Data:** Fang collected race, gender, and age information of actors using NNDB (https://www.nndb.com), where celebrities’ gender, race, birthday, and nationality information is aggregated as well as Kairos, a facial recognition ML API (https://www.kairos.com) to identify casts’ race, gender, and age by their photos on their IMDb personal page.
+**Demographic Data:** Fang collected race, gender, and age information
+of actors using NNDB (<https://www.nndb.com>), where celebrities'
+gender, race, birthday, and nationality information is aggregated as
+well as Kairos, a facial recognition ML API (<https://www.kairos.com>)
+to identify casts' race, gender, and age by their photos on their IMDb
+personal page.
 
-**Differences in our data collection process:** Fang selected the top 30 films per year from 2006-17; due to time constraints, we selected the top 10 films per year. We chose not to use the Kairos ML facial recognition due to low confidence levels and the bias of the black-box algorithm, preferring as researchers to make categorizing decisions and reflect on our biases.
+**Differences in our data collection process:** Fang selected the top 30
+films per year from 2006-17; due to time constraints, we selected the
+top 10 films per year. We chose not to use the Kairos ML facial
+recognition due to low confidence levels and the bias of the black-box
+algorithm, preferring as researchers to make categorizing decisions and
+reflect on our biases.
 
 ### Replication Cleaning Page
+
 This page is our cleaning process.
+:::
 
-
+::: {#3df83a0a-441d-47ba-bf87-f74d19024d45 .cell .markdown}
 ### Read the data
+:::
 
-
-```python
+::: {#b691c657-8a71-4740-8a8f-c03c8dcf4503 .cell .code execution_count="1"}
+``` python
 #IMPORT LIBRARIES
 
 import pandas as pd
@@ -52,9 +127,8 @@ df = pd.read_csv("data/movie_metadata.csv")
 df.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="1"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -221,15 +295,18 @@ df.head()
 </table>
 <p>5 rows × 28 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#f2beeb4d-2a05-4831-a776-f69c1f96d7f3 .cell .markdown}
 ### Data Preprocessing: Cleaning and Preparing Variables
 
 #### IMDB 5000 Dataset
+:::
 
-
-```python
+::: {#14afc6b0-7a85-4b4d-99a4-430715a98e58 .cell .code execution_count="2"}
+``` python
 #START REPLICATION
 #creating a new filtered df with only the years 2006-2017
 filtered_df = df[(df['title_year'] >= 2007) & (df['title_year'] <= 2016)]
@@ -252,13 +329,17 @@ filtered_df.drop(filtered_df[filtered_df['language'] != 'English'].index, inplac
 #drop all rows without revenue data
 filtered_df.drop(filtered_df[filtered_df['gross'] == 0].index, inplace=True)
 ```
+:::
 
+::: {#74870361-e41c-48d5-bcca-95c24b658ae2 .cell .markdown}
 #### Filling in missing budget values
 
-Manually create a dictionary and find the missing budget data using [The Numbers](https://www.the-numbers.com/market/)  
+Manually create a dictionary and find the missing budget data using [The
+Numbers](https://www.the-numbers.com/market/)
+:::
 
-
-```python
+::: {#15b2c297-7421-40f2-81e8-fcf56ca672e5 .cell .code execution_count="3"}
+``` python
 #finds films with no budget values
 zero_budget = filtered_df[pd.isna(filtered_df['budget'])]
 
@@ -409,13 +490,18 @@ filtered_df['budget'] = filtered_df['budget'].fillna(filtered_df['movie_title'].
 #drop the Nan value
 filtered_df = filtered_df.dropna(subset=['budget'])
 ```
+:::
 
+::: {#b18a53f1-7e53-4a23-8fbd-c174b457a832 .cell .markdown}
 #### Find top 10 films per year with the highest budget
 
-Limitation note: Xing Fan used the top 30 films with the highest budget per year. Due to scope, we have reduced our sample to 10. This will limit our ability to replicate completely.
+Limitation note: Xing Fan used the top 30 films with the highest budget
+per year. Due to scope, we have reduced our sample to 10. This will
+limit our ability to replicate completely.
+:::
 
-
-```python
+::: {#2d5f95b7-a5e3-4ee7-ab1a-22d1ed393576 .cell .code execution_count="4"}
+``` python
 #groupby year and find top 10 films with highest budget
 top10_by_year = filtered_df.groupby('title_year').apply(lambda group: group.nlargest(10, 'budget'))
 
@@ -428,9 +514,7 @@ top_actors['actor_3_name'].str.strip()
 top_actors['movie_title'].str.strip()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="4"}
     0     Pirates of the Caribbean: At World's End
     1                                 Spider-Man 3
     2                           The Golden Compass
@@ -443,16 +527,23 @@ top_actors['movie_title'].str.strip()
     98                                    Warcraft
     99                                Ghostbusters
     Name: movie_title, Length: 100, dtype: object
+:::
+:::
 
-
-
+::: {#428b47b6-c46a-49e5-a0c2-ea3e9490efa8 .cell .markdown}
 ### Actor Diversity Data Collection
 
-Manual collection using IMDB Pro. 
+Manual collection using IMDB Pro.
 
-Note: Xing Fan used machine learning to identify race into the following categories; White, Black, Asian, Hispanic, Other. We chose to omit the machine learning process and decide racial identity based off the information available on the actors IMDB Pro 'about' page, cross referencing with other sites such as Wikipedia and the actors social media pages when race was ambiguous.
+Note: Xing Fan used machine learning to identify race into the following
+categories; White, Black, Asian, Hispanic, Other. We chose to omit the
+machine learning process and decide racial identity based off the
+information available on the actors IMDB Pro \'about\' page, cross
+referencing with other sites such as Wikipedia and the actors social
+media pages when race was ambiguous.
 
 #### Building the diversity dictionary
+
 Key = Actor name
 
 Value 1 = Gender
@@ -460,9 +551,10 @@ Value 1 = Gender
 Value 2 = Race
 
 Value 3 = Birth Year
+:::
 
-
-```python
+::: {#94658a60-55f4-48c3-b216-eb18c474e4e0 .cell .code execution_count="5"}
+``` python
 # Unique actors dictionary
 # Name: Gender(F/N/M), Race (W/B/H/A/O), Birth Year
 diversity_dict = {
@@ -682,13 +774,15 @@ diversity_dict = {
     'Hayley Atwell':('F', 'W', 1982),
     'James Nesbitt':('M', 'W', 1965)
 }
-
 ```
+:::
 
+::: {#763ddfcf-c8ec-4e1c-abdf-a0afa73d8313 .cell .markdown}
 #### Function to populate the diversity data from the dictionary to the top_actors df
+:::
 
-
-```python
+::: {#2701e457-bd36-4bb0-a813-af45b1e012f5 .cell .code execution_count="6"}
+``` python
 #function to find the actors diversity data according to row
 def get_combined_info(row, info_index):
     actor_list = [row['actor_1_name'], row['actor_2_name'], row['actor_3_name']]
@@ -709,9 +803,8 @@ top_actors['birth_year'] = top_actors.apply(lambda row: get_combined_info(row, 2
 top_actors
 ```
 
-
-
-
+::: {.output .execute_result execution_count="6"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -914,55 +1007,64 @@ top_actors
 </table>
 <p>100 rows × 12 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#a509279b-0345-489c-964b-38f136efeee4 .cell .markdown}
 #### Assertation test to ensure all the data has populated and there are no unknown values
+:::
 
-
-```python
+::: {#9c9884a4-e1f1-4132-844f-0ce27957c186 .cell .code execution_count="7"}
+``` python
 assert not any(top_actors['genders'].astype(str).eq('Unknown'))
 assert not any(top_actors['race'].astype(str).eq('Unknown'))
 assert not any(top_actors['birth_year'].astype(str).eq('Unknown'))
 ```
+:::
 
+::: {#0b014291-b8ce-4635-8078-feab2399efb2 .cell .markdown}
 ### Gender and Race Variables
 
 #### Converting gender to Female Proportion
 
-The study looks at 'female vs other'.
+The study looks at \'female vs other\'.
+:::
 
-
-```python
+::: {#b188202b-dbbe-46e5-99e7-172893c6e33d .cell .code execution_count="8"}
+``` python
 #The female proportion of actors is calculated as the number of 'F' in each movie divided by three.
 Fproportions = top_actors.genders.apply(lambda cast: cast.count('F') / 3)
 
 #put proportions into a new column
 top_actors['female_proportion'] = Fproportions
 ```
+:::
 
+::: {#ec11ae0d-763a-4d18-9742-dac596adc7b4 .cell .markdown}
 #### Converting race to White Proportion
 
-The study looks at 'white vs other'.
+The study looks at \'white vs other\'.
+:::
 
-
-```python
+::: {#ca82dbc5-7b08-4aae-80b2-050fa90a47c9 .cell .code execution_count="9"}
+``` python
 #calculate race proportion using similar lambda function
 Wproportions = top_actors.race.apply(lambda cast: cast.count('W')/3)
 
 #put proportions into a new column
 top_actors['white_proportion'] = Wproportions
 ```
+:::
 
-
-```python
+::: {#4ea85e4e-b9e6-49f8-b5db-eb065db7b5f6 .cell .code execution_count="10"}
+``` python
 #display
 top_actors.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="10"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1086,15 +1188,18 @@ top_actors.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#1a2ccd6c-f76a-4088-b0c9-c6d604fc097b .cell .markdown}
 ### Average Age Variable
 
-#### Calculating 'age at the time of movie' then average age for the 3 top cast per movie
+#### Calculating \'age at the time of movie\' then average age for the 3 top cast per movie
+:::
 
-
-```python
+::: {#608315f4-0c4c-4f9a-871a-5f63658780bd .cell .code execution_count="11"}
+``` python
 #function to calculate age at time of movie
 def calculate_age(row):
     return [row['title_year'] - year for year in row['birth_year']]
@@ -1111,9 +1216,8 @@ top_actors['average_age'] = top_actors['age_at_time_of_movie'].apply(lambda age_
 top_actors.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="11"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1249,18 +1353,23 @@ top_actors.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#918bdab0-3f5c-4555-a8a7-250bb05524e9 .cell .markdown}
 ### Attendance Variable
 
 #### Calculating attendance (in million viewer)
 
-We collect U.S. average movie ticket price data from 2007 to 2016 from [Statista](https://www.statista.com/) and calculate the movie attendance using domestic movie sales
-divided by U.S. movie average ticket price in each year. 
+We collect U.S. average movie ticket price data from 2007 to 2016 from
+[Statista](https://www.statista.com/) and calculate the movie attendance
+using domestic movie sales divided by U.S. movie average ticket price in
+each year.
+:::
 
-
-```python
+::: {#8b49e616-1e11-47e2-99d5-c29310400de0 .cell .code execution_count="12"}
+``` python
 av_ticket_price = {
     2016: 8.65,
     2015: 8.43,
@@ -1284,9 +1393,8 @@ top_actors['attendance_in_mills'] = (top_actors['attendance'] / 1_000_000).round
 top_actors.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="12"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1434,15 +1542,18 @@ top_actors.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#4e0b7d99-3b39-4ace-99d4-387fd81efbf2 .cell .markdown}
 ### Content Rating Variable
 
 #### Converting content rating categorical variables using dummy encoding
+:::
 
-
-```python
+::: {#672a73f9-935f-4436-bcdd-85cade8f320d .cell .code execution_count="13"}
+``` python
 # Use get_dummies to create dummy columns for 'content_rating'
 content_rating_dummies = pd.get_dummies(top_actors['content_rating'], prefix='content_rating (Dummy)')
 
@@ -1453,9 +1564,8 @@ top_actors = pd.concat([top_actors, content_rating_dummies], axis=1)
 top_actors.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="13"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1622,17 +1732,21 @@ top_actors.head()
 </table>
 <p>5 rows × 21 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#62fa5a8b-559e-482d-ac23-b5a81f73c560 .cell .markdown}
 ### Genre Variables
 
 #### Converting genre categorical variables using binary encoding
 
-Each film has multiple genes so binary, rather than dummy, encoding has been used.
+Each film has multiple genes so binary, rather than dummy, encoding has
+been used.
+:::
 
-
-```python
+::: {#7aaa9d06-8145-46d0-a3cc-c87483f595cb .cell .code execution_count="14"}
+``` python
 # Create binary columns for 'comedy', 'action', 'drama', and 'other'
 top_actors['genre_comedy (Dummy)'] = top_actors['genres'].apply(lambda x: 1 if 'Comedy' in x else 0)
 top_actors['genre_action (Dummy)'] = top_actors['genres'].apply(lambda x: 1 if 'Action' in x else 0)
@@ -1643,9 +1757,8 @@ top_actors['genre_other (Dummy)'] = top_actors['genres'].apply(lambda x: 0 if an
 top_actors
 ```
 
-
-
-
+::: {.output .execute_result execution_count="14"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1956,15 +2069,18 @@ top_actors
 </table>
 <p>100 rows × 25 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#b9a7ea33-fb77-4d14-b5b9-10a9efa4a647 .cell .markdown}
 ### Budget Variable
 
 #### Convert budget to millions
+:::
 
-
-```python
+::: {#f0da2739-715b-420a-a14c-e05c65e6c7e2 .cell .code execution_count="15"}
+``` python
 #convert to millions
 top_actors['budget_in_mills'] = (top_actors['budget'] / 1_000_000).round(0)
 
@@ -1972,9 +2088,8 @@ top_actors['budget_in_mills'] = (top_actors['budget'] / 1_000_000).round(0)
 top_actors.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="15"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -2141,17 +2256,24 @@ top_actors.head()
 </table>
 <p>5 rows × 26 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#11029011-7be9-4de3-a8d5-10afd83ae510 .cell .markdown}
 ### Highest Starpower Variable
 
-Starpower is the actors 'popularity rating' and is manually found using IMDB Pro. The actors starpower value that is 10 weeks prior to the film release date is used due to literature suggestion about the influence of marketing and box office sales. It is the method Xing Fan used.
+Starpower is the actors \'popularity rating\' and is manually found
+using IMDB Pro. The actors starpower value that is 10 weeks prior to the
+film release date is used due to literature suggestion about the
+influence of marketing and box office sales. It is the method Xing Fan
+used.
 
 #### Building Starpower Dictionary
+:::
 
-
-```python
+::: {#74468594-c5ab-40fe-ab1e-e1d7504fec3a .cell .code execution_count="16"}
+``` python
 #dict needs this format to account for actors that appear in more than one movie
 # the -- enables the string to be split later on
 
@@ -2458,13 +2580,15 @@ starpower_dict = {
     'Warcraft--Ruth Negga':825,
     'Ghostbusters--Zach Woods':560,
 }
-
 ```
+:::
 
+::: {#1ecf7a14-c55b-4ac3-893f-a02d9eb807db .cell .markdown}
 #### Populating Starpower Values into a df
+:::
 
-
-```python
+::: {#f7477f7f-8d9a-4037-91b8-9179fff55868 .cell .code execution_count="17"}
+``` python
 #create the unique movie--actor values to map the correct starpower values for all actors
 movie_actor_1_list = (top_actors['movie_title'] + '--' + top_actors['actor_1_name']).tolist()
 movie_actor_2_list = (top_actors['movie_title'] + '--' + top_actors['actor_2_name']).tolist()
@@ -2480,9 +2604,8 @@ starpower_df = pd.DataFrame({'movie_actor': combined_list})
 starpower_df
 ```
 
-
-
-
+::: {.output .execute_result execution_count="17"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -2553,11 +2676,12 @@ starpower_df
 </table>
 <p>300 rows × 1 columns</p>
 </div>
+```
+:::
+:::
 
-
-
-
-```python
+::: {#593cb992-f225-4bf6-aa60-497c17e6392d .cell .code execution_count="18"}
+``` python
 #function to get the dictionary value based on the 'movie_actor' column
 def get_dict_value(row):
     key = row['movie_actor']
@@ -2570,9 +2694,8 @@ starpower_df['starpower_value'] = starpower_df.apply(get_dict_value, axis=1)
 starpower_df
 ```
 
-
-
-
+::: {.output .execute_result execution_count="18"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -2655,22 +2778,28 @@ starpower_df
 </table>
 <p>300 rows × 2 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#1e38ab5e-1560-440f-a524-1b85f8c71c41 .cell .markdown}
 #### Assertation test to check there are no NaN values in starpower_values
+:::
 
-
-```python
+::: {#9497eeae-3a4b-49c7-8207-f753458cac40 .cell .code execution_count="19"}
+``` python
 starpower_dict_nan_count = starpower_df['starpower_value'].isna().sum()
 
 assert starpower_dict_nan_count == 0
 ```
+:::
 
+::: {#0e498c83-446c-4558-ad9f-6088bac92fc8 .cell .markdown}
 #### Merge with the top_actors df
+:::
 
-
-```python
+::: {#2a7cc429-cdc9-4bb1-8926-f45b053b1690 .cell .code execution_count="20"}
+``` python
 #split at the -- to get movie and actor separated
 starpower_df[['movie_name', 'actor']] = starpower_df['movie_actor'].str.split('--', expand=True)
 
@@ -2691,9 +2820,8 @@ merged_df['highest_starpower'] = merged_df['starpower_value'].apply(lambda value
 merged_df
 ```
 
-
-
-
+::: {.output .execute_result execution_count="20"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -3004,15 +3132,20 @@ merged_df
 </table>
 <p>100 rows × 28 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#78c9addd-1d1a-4b84-9d45-1e6c4e8cb12c .cell .markdown}
 ### Creating clean_df for analysis
 
-Limitation Note: Xing Fan used season as control varaible, duration as control variable and IMDB score as control variable. We are omitting due to scope. 
+Limitation Note: Xing Fan used season as control varaible, duration as
+control variable and IMDB score as control variable. We are omitting due
+to scope.
+:::
 
-
-```python
+::: {#e49842a1-5f78-4d6e-8fbe-987c688c95ba .cell .code execution_count="21"}
+``` python
 #create a df with only necessary data for analysis
 
 clean_df = merged_df.loc[:, [
@@ -3035,9 +3168,8 @@ clean_df = merged_df.loc[:, [
 clean_df.head() 
 ```
 
-
-
-
+::: {.output .execute_result execution_count="21"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -3155,11 +3287,12 @@ clean_df.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
-
-```python
+::: {#f2bd4c86-6a13-4e78-9904-91086b43f5d5 .cell .code execution_count="24"}
+``` python
 clean_df_2 = merged_df.loc[:, [
     'white_proportion',
     'female_proportion',
@@ -3181,9 +3314,8 @@ clean_df_2 = merged_df.loc[:, [
 clean_df_2.head() 
 ```
 
-
-
-
+::: {.output .execute_result execution_count="24"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -3307,18 +3439,26 @@ clean_df_2.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#2acf482c-fed8-4ec8-b1a2-e2520e1919dd .cell .markdown}
 ### Save as a CSV
+:::
 
-
-```python
+::: {#954c24f7-22ca-4df2-92d6-5cba0913757f .cell .code execution_count="25"}
+``` python
 # export into data folder
 clean_df.to_csv('data/clean_data.csv', index=False)
 clean_df_2.to_csv('data/clean_data_2.csv', index=False)
 
-
 ```
+:::
 
-This page contains code that cleans the IMDb 5000 Kaggle data set in accordance with Xing Fan’s 2021 method and exports the clean dataframe as clean_data.csv file. clean_data.csv is then used for the next page Replication Results.
+::: {#7c8e0776-327c-4e54-af07-19d96f74fec5 .cell .markdown}
+This page contains code that cleans the IMDb 5000 Kaggle data set in
+accordance with Xing Fan's 2021 method and exports the clean dataframe
+as clean_data.csv file. clean_data.csv is then used for the next page
+Replication Results.
+:::
