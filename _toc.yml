@@ -2,8 +2,8 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: Replication_Cleaning.Rmd
+root: Replication_Cleaning.rmd
 chapters:
-- file: Replication_Results.Rmd
-- file: Further_Analysis.Rmd
+- file: Replication_Results.rmd
+- file: Further_Analysis.rmd
 - file:
