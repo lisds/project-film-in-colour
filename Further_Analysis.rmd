@@ -1,13 +1,35 @@
+---
+jupyter:
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+  language_info:
+    codemirror_mode:
+      name: ipython
+      version: 3
+    file_extension: .py
+    mimetype: text/x-python
+    name: python
+    nbconvert_exporter: python
+    pygments_lexer: ipython3
+    version: 3.11.6
+  nbformat: 4
+  nbformat_minor: 5
+---
+
+::: {#c3d963da-6526-4dfd-88c0-15bae70786c4 .cell .markdown}
 # Project Film in Colour
 
 # Further Analysis
 
 **Part 1:** Multi-level regression using nesting
 
-**Part 2:** Investigating movie streaming 
+**Part 2:** Investigating movie streaming
+:::
 
-
-```python
+::: {#8d46f98d-def2-49d2-93d0-9f2c3b67e16b .cell .code execution_count="1"}
+``` python
 #IMPORT LIBRARIES
 
 import pandas as pd
@@ -27,6 +49,7 @@ clean_df_2 = pd.read_csv("data/clean_data_2.csv")
 clean_df_2.head()
 ```
 
+::: {.output .stream .stdout}
     Requirement already satisfied: statsmodels in /opt/conda/lib/python3.11/site-packages (0.14.0)
     Requirement already satisfied: numpy>=1.18 in /opt/conda/lib/python3.11/site-packages (from statsmodels) (1.26.2)
     Requirement already satisfied: scipy!=1.9.2,>=1.4 in /opt/conda/lib/python3.11/site-packages (from statsmodels) (1.11.3)
@@ -37,11 +60,10 @@ clean_df_2.head()
     Requirement already satisfied: pytz>=2020.1 in /opt/conda/lib/python3.11/site-packages (from pandas>=1.0->statsmodels) (2023.3.post1)
     Requirement already satisfied: tzdata>=2022.1 in /opt/conda/lib/python3.11/site-packages (from pandas>=1.0->statsmodels) (2023.3)
     Requirement already satisfied: six in /opt/conda/lib/python3.11/site-packages (from patsy>=0.5.2->statsmodels) (1.16.0)
+:::
 
-
-
-
-
+::: {.output .execute_result execution_count="1"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -165,31 +187,56 @@ clean_df_2.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#36214050-1d5d-40dd-b9b8-60b7789be642 .cell .markdown}
 ## Part 1
 
 ## Mixed Effects Model, Grouping by Genre
 
 #### Introduction
 
-Xi Fang's research highlights the audience's preference for White leading actors in movies, but it raises the question of whether this preference stems from the actors' race or the predominantly White-centric themes in the stories. Fang suggests future research should focus on the impact of movie storylines on market performance, especially in films featuring predominantly White or male narratives, to better understand what drives movie success.
+Xi Fang\'s research highlights the audience\'s preference for White
+leading actors in movies, but it raises the question of whether this
+preference stems from the actors\' race or the predominantly
+White-centric themes in the stories. Fang suggests future research
+should focus on the impact of movie storylines on market performance,
+especially in films featuring predominantly White or male narratives, to
+better understand what drives movie success.
 
-In the intersectional data science literature we found using mixed-effects models is particularly beneficial in this context. (Scott, 2017) These models can disentangle whether the audience preference is for White actors themselves or for stories about White people, by incorporating movie genre as a random effect. This allows for an analysis of audience preferences across different genres, acknowledging that genres like historical dramas or fantasy may inherently feature more White-led narratives.
+In the intersectional data science literature we found using
+mixed-effects models is particularly beneficial in this context. (Scott,
+2017) These models can disentangle whether the audience preference is
+for White actors themselves or for stories about White people, by
+incorporating movie genre as a random effect. This allows for an
+analysis of audience preferences across different genres, acknowledging
+that genres like historical dramas or fantasy may inherently feature
+more White-led narratives.
 
-Mixed-effects models are adept at handling the effects of race and gender on movie market performance, offering a nuanced understanding of these relationships. By grouping movies by genre, they enable an examination of how intersectional factors such as race and gender play out across various genres. This approach is effective because movies fall into hierarchical categories like genres, where movies within the same genre might share certain characteristics, and mixed-effects models are well-suited to capture both within-genre and between-genre variations.
+Mixed-effects models are adept at handling the effects of race and
+gender on movie market performance, offering a nuanced understanding of
+these relationships. By grouping movies by genre, they enable an
+examination of how intersectional factors such as race and gender play
+out across various genres. This approach is effective because movies
+fall into hierarchical categories like genres, where movies within the
+same genre might share certain characteristics, and mixed-effects models
+are well-suited to capture both within-genre and between-genre
+variations.
 
 ### White Proportion MLR
+:::
 
-
-```python
+::: {#613bb24b-8be4-4529-bf48-3c0c8e88384b .cell .code execution_count="2"}
+``` python
 ml_model = smf.mixedlm('attendance_in_mills ~ white_proportion', 
                                 clean_df_2, groups=clean_df_2['genres'])
 mdf = ml_model.fit()
 print(mdf.summary())  
 ```
 
+::: {.output .stream .stdout}
                   Mixed Linear Model Regression Results
     =================================================================
     Model:            MixedLM Dependent Variable: attendance_in_mills
@@ -205,19 +252,22 @@ print(mdf.summary())
     white_proportion    0.210     7.357  0.029  0.977  -14.209  14.630
     Group Var           8.598     1.271                               
     =================================================================
-    
+:::
+:::
 
-
+::: {#b4f1f4b2-f86b-496e-8632-d211129b6126 .cell .markdown}
 ### Female Proportion MLR
+:::
 
-
-```python
+::: {#a5d990db-71a7-4aba-b074-96e112903b2e .cell .code execution_count="3"}
+``` python
 multilevel_model = smf.mixedlm('attendance_in_mills ~ female_proportion', 
                                 clean_df_2, groups=clean_df_2['genres'])
 mdf = multilevel_model.fit()
 print(mdf.summary()) 
 ```
 
+::: {.output .stream .stdout}
                   Mixed Linear Model Regression Results
     =================================================================
     Model:            MixedLM Dependent Variable: attendance_in_mills
@@ -233,13 +283,15 @@ print(mdf.summary())
     female_proportion     -1.864    7.105 -0.262 0.793 -15.790 12.061
     Group Var              8.629    1.264                            
     =================================================================
-    
+:::
+:::
 
+::: {#823e23f6-86c6-4204-842e-a03d15292f84 .cell .markdown}
+### White\*Female Interaction MLR
+:::
 
-### White*Female Interaction MLR
-
-
-```python
+::: {#c1399ffa-87ad-43ba-becf-20af2411ea69 .cell .code execution_count="4"}
+``` python
 clean_df_2['white_female_interaction'] = (clean_df_2['white_proportion']* clean_df_2['female_proportion'])
 
 # Mixed Linear Model
@@ -249,6 +301,7 @@ mdf = multilevel_model.fit()
 print(mdf.summary())   
 ```
 
+::: {.output .stream .stdout}
                     Mixed Linear Model Regression Results
     =====================================================================
     Model:              MixedLM  Dependent Variable:  attendance_in_mills
@@ -266,32 +319,58 @@ print(mdf.summary())
     white_female_interaction -36.697   27.174 -1.350 0.177 -89.957 16.563
     Group Var                 14.666    1.486                            
     =====================================================================
-    
+:::
+:::
 
-
+::: {#77aa76d7-3c58-4674-a13b-e0a5e03fb0f7 .cell .markdown}
 ### MLR Results
 
-The mixed linear model suggests no significant effect of cast demographics on movie attendance in the sample analyzed. The presence of White leading actors (coefficient = 0.419, p = 0.815) and the interaction between White and female leading actors (coefficient = -2.649, p = 0.177) were not statistically significant predictors of movie attendance. Similarly, the proportion of female leading actors was associated with a negative, yet non-significant, impact on attendance (coefficient = -1.369, p = 0.467).
+The mixed linear model suggests no significant effect of cast
+demographics on movie attendance in the sample analyzed. The presence of
+White leading actors (coefficient = 0.419, p = 0.815) and the
+interaction between White and female leading actors (coefficient =
+-2.649, p = 0.177) were not statistically significant predictors of
+movie attendance. Similarly, the proportion of female leading actors was
+associated with a negative, yet non-significant, impact on attendance
+(coefficient = -1.369, p = 0.467).
 
-A notable aspect of the model is the observed variability in attendance across movie genres, reflected by a group variance of 14.666. This indicates that genre-specific factors significantly influence attendance and merit further exploration.
+A notable aspect of the model is the observed variability in attendance
+across movie genres, reflected by a group variance of 14.666. This
+indicates that genre-specific factors significantly influence attendance
+and merit further exploration.
 
-The findings underscore the complexity of audience preferences, with no clear pattern emerging on the influence of racial and gender diversity in leading roles on movie attendance within this dataset.
+The findings underscore the complexity of audience preferences, with no
+clear pattern emerging on the influence of racial and gender diversity
+in leading roles on movie attendance within this dataset.
+:::
 
-
-
+::: {#a2a5d256-1409-4644-8179-85c478eaca8a .cell .markdown}
 ## Part 2
 
 ## Streaming
 
-#### Introduction
+#### Introduction {#introduction}
 
-Another method for our further analysis is investigating if consumer discrimination is present in streaming data. Netflix released their first ever viewing data in December 2023-What We Watched: A Netflix Engagement Report including raw data: https://about.netflix.com/en/news/what-we-watched-a-netflix-engagement-report. They have been critiqued in the past for a lack of transparency when it comes to data sharing, yet have recently released viewing data on 18,000 titles representing 99% of all viewing on Netflix — and nearly 100 billion hours viewed. In the current era of streaming, moving away from cinematic shows, this is more relevant to today's consumer culture.
+Another method for our further analysis is investigating if consumer
+discrimination is present in streaming data. Netflix released their
+first ever viewing data in December 2023-What We Watched: A Netflix
+Engagement Report including raw data:
+<https://about.netflix.com/en/news/what-we-watched-a-netflix-engagement-report>.
+They have been critiqued in the past for a lack of transparency when it
+comes to data sharing, yet have recently released viewing data on 18,000
+titles representing 99% of all viewing on Netflix --- and nearly 100
+billion hours viewed. In the current era of streaming, moving away from
+cinematic shows, this is more relevant to today\'s consumer culture.
 
-The Netflix data set contains limited variables and as such we chose to investigate shows that are streamed globally. Due to the limited time frame of this analysis, the top five shows with the highest viewing hours for the previous five years (2019-2023) were analysed. The same hypotheses as in our replication were investigated.
+The Netflix data set contains limited variables and as such we chose to
+investigate shows that are streamed globally. Due to the limited time
+frame of this analysis, the top five shows with the highest viewing
+hours for the previous five years (2019-2023) were analysed. The same
+hypotheses as in our replication were investigated.
+:::
 
-
-
-```python
+::: {#4eb3b843-35a6-43a8-a9c7-b6675f37e83e .cell .code execution_count="5"}
+``` python
 #READ THE DATA AND CLEAN
 df = pd.read_csv("data/What_We_Watched_A_Netflix_Engagement_Report_2023Jan-Jun.csv", encoding='latin1')
 df = df.drop(columns=['Unnamed: 0', 'Unnamed: 5'])
@@ -306,9 +385,8 @@ df['Title'] = df['Title'].astype(str)
 df.head(20)
 ```
 
-
-
-
+::: {.output .execute_result execution_count="5"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -498,11 +576,12 @@ df.head(20)
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
-
-```python
+::: {#e8de862f-f410-43e7-aedc-8097753f2f8d .cell .code execution_count="6"}
+``` python
 df_sorted = df.sort_values(by='Year')
 df_sorted = df_sorted.dropna(subset=['Year'])
 df_sorted['Available Globally?'] = df_sorted['Available Globally?'].astype(str)
@@ -510,9 +589,8 @@ global_df = df_sorted[df_sorted['Available Globally?'] == 'Yes']
 global_df.reset_index(drop=True)
 ```
 
-
-
-
+::: {.output .execute_result execution_count="6"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -631,18 +709,18 @@ global_df.reset_index(drop=True)
 </table>
 <p>3915 rows × 5 columns</p>
 </div>
+```
+:::
+:::
 
-
-
-
-```python
+::: {#e60d250d-072c-4800-806f-e4a1ac25f6aa .cell .code execution_count="7"}
+``` python
 recent_years_df = global_df[(global_df['Year']>=2019)]
 recent_years_df.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="7"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -712,24 +790,25 @@ recent_years_df.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
-
-```python
+::: {#e37356d1-12d0-4702-b451-0228fb24f876 .cell .code execution_count="9"}
+``` python
 recent_years_df['Hours Viewed'] = recent_years_df['Hours Viewed'].str.replace(',', '')
 recent_years_df['Hours Viewed'] = pd.to_numeric(recent_years_df['Hours Viewed'])
 ```
+:::
 
-
-```python
+::: {#45adb4ce-5e4c-4abc-b518-e17c6e171352 .cell .code execution_count="10"}
+``` python
 top_5_per_year = recent_years_df.groupby('Year').apply(lambda group: group.nlargest(5, 'Hours Viewed'))
 top_5_per_year.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="10"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -810,15 +889,18 @@ top_5_per_year.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#893935b4-16e2-42ca-baa8-ef16b4ebcc87 .cell .markdown}
 #### Manually build the netflix diversity dictionary
 
 Using IMDb Pro
+:::
 
-
-```python
+::: {#c96a876f-eabd-4ed9-aeaa-8d0c3b51344a .cell .code execution_count="11"}
+``` python
 # race = B, W, A, H, O
 # show -- actor : ('Gender', 'Race', 'Age')
 netflix_dict_maybe = {
@@ -896,9 +978,10 @@ netflix_dict_maybe = {
     'Outer Banks: Season 3--Rudy Pankow': ('M', 'W', 1997),
 }
 ```
+:::
 
-
-```python
+::: {#3ff2a6b5-fdd2-48cc-9e81-c71df949f9da .cell .code execution_count="12"}
+``` python
 # Create a DataFrame
 diversity_df = pd.DataFrame.from_dict(netflix_dict_maybe, orient='index', columns=['Gender', 'Race', 'Year of Birth'])
 
@@ -914,9 +997,8 @@ diversity_df['Title'] = diversity_df['Title'].apply(lambda x: x.split('--')[0])
 diversity_df.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="12"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -986,11 +1068,12 @@ diversity_df.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
-
-```python
+::: {#d638e670-a979-43f3-974e-c82d9cf56355 .cell .code execution_count="13"}
+``` python
 # Group by 'Title' and aggregate values into lists
 grouped_df = diversity_df.groupby('Title').agg({
     'Gender': list,
@@ -1002,9 +1085,8 @@ grouped_df = diversity_df.groupby('Title').agg({
 grouped_df.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="13"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1068,20 +1150,20 @@ grouped_df.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
-
-```python
+::: {#115c5365-18d8-4a1b-9e44-a8bf23b40c08 .cell .code execution_count="14"}
+``` python
 merged_df = pd.merge(grouped_df, top_5_per_year, on='Title', how='left')
 
 # Display the merged DataFrame
 merged_df.head()
 ```
 
-
-
-
+::: {.output .execute_result execution_count="14"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1169,13 +1251,16 @@ merged_df.head()
   </tbody>
 </table>
 </div>
+```
+:::
+:::
 
-
-
+::: {#b0bf6166-07d0-45bd-b2a1-b133145ef02c .cell .markdown}
 #### Calculate Gender and race proportions
+:::
 
-
-```python
+::: {#e286d767-7e35-4212-b567-06e027566c3c .cell .code execution_count="15"}
+``` python
 #The female proportion of actors is calculated as the number of 'F' in each movie divided by three.
 Fproportions = merged_df.Gender.apply(lambda cast: cast.count('F') / 3)
 
@@ -1192,9 +1277,8 @@ merged_df['white_proportion'] = Wproportions
 merged_df
 ```
 
-
-
-
+::: {.output .execute_result execution_count="15"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1373,13 +1457,16 @@ merged_df
 </table>
 <p>24 rows × 10 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#bf2b60a3-3771-45a7-a93e-a8cdc915fcc4 .cell .markdown}
 #### Age
+:::
 
-
-```python
+::: {#7aadb28a-def6-4878-98e3-b9ffabf2ee10 .cell .code execution_count="16"}
+``` python
 # Function to calculate age at the time of the movie
 def calculate_age(row):
     return [row['Year'] - year for year in row['Year of Birth']]
@@ -1397,9 +1484,8 @@ merged_df['average_age'] = merged_df['age_at_time_of_movie'].apply(lambda age_li
 merged_df
 ```
 
-
-
-
+::: {.output .execute_result execution_count="16"}
+```{=html}
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1602,27 +1688,34 @@ merged_df
 </table>
 <p>24 rows × 12 columns</p>
 </div>
+```
+:::
+:::
 
-
-
+::: {#47422c17-287e-4ac7-b013-6607308357cc .cell .markdown}
 ### Analysis
 
 #### White
+:::
 
-
-```python
+::: {#13b72baa-8396-4a98-9bbb-6e0154673ca4 .cell .code execution_count="17"}
+``` python
 from scipy.stats import pearsonr
 correlation_coefficient, p_value = pearsonr(merged_df['white_proportion'], merged_df['Hours Viewed'])
 print(f"Pearson Correlation Coefficient: {correlation_coefficient:.2f}, p-value: {p_value:.4f}")
 ```
 
+::: {.output .stream .stdout}
     Pearson Correlation Coefficient: -0.16, p-value: 0.4494
+:::
+:::
 
-
+::: {#be17ec1b-91c1-45aa-aee4-83c65512da31 .cell .markdown}
 #### Visualise with regplot
+:::
 
-
-```python
+::: {#6b733a41-8e10-423d-be30-0e586c2a38a1 .cell .code execution_count="19"}
+``` python
 sns.regplot(x='white_proportion', y='Hours Viewed', data=merged_df)
 plt.title('Regression Plot')
 plt.xlabel('White Proportion')
@@ -1630,31 +1723,46 @@ plt.ylabel('Hours Viewed')
 plt.show()
 ```
 
+::: {.output .display_data}
+![](vertopal_774da5d1909c452b973377ff55f79410/de77622a91e4d34ac371177d018cbfcbf559edcf.png)
+:::
+:::
 
-    
-![png](output_27_0.png)
-    
+::: {#b685d5d1-f32b-4edf-b5c0-a3da8e0fbf62 .cell .markdown}
+**Explanation:** The Correlation Coefficient between the
+\'white_proportion\' and \'Hours Viewed\' is -0.16. The negative
+correlation indicates that as white proportion increases, hours viewed
+decreases however the magnitude of the correlation is relatively weak
+suggesting a low linear relationship between the two variables. The P
+value is greater than the common significance level of 0.05, therefore
+there is no correlation between the \'white_proportion\' and \'Hours
+Viewed\' variables and there is not enough evidence to reject the null
+hypothesis. Based on these results, we cannot confidently assert a
+meaningful relationship between the proportion of white individuals and
+the number of hours viewed.
+:::
 
-
-**Explanation:** The Correlation Coefficient between the 'white_proportion' and 'Hours Viewed' is -0.16. The negative correlation indicates that as white proportion increases, hours viewed decreases however the magnitude of the correlation is relatively weak suggesting a low linear relationship between the two variables. The P value is greater than the common significance level of 0.05, therefore there is no correlation between the 'white_proportion' and 'Hours Viewed' variables and there is not enough evidence to reject the null hypothesis. Based on these results, we cannot confidently assert a meaningful relationship between the proportion of white individuals and the number of hours viewed.
-
-
-
+::: {#be1112b1-af57-4ba8-a585-23e4b75f6726 .cell .markdown}
 #### Female
+:::
 
-
-```python
+::: {#028c728b-8dd6-4835-80a7-02e805643ec2 .cell .code execution_count="21"}
+``` python
 correlation_coefficient, p_value = pearsonr(merged_df['female_proportion'], merged_df['Hours Viewed'])
 print(f"Pearson Correlation Coefficient: {correlation_coefficient:.2f}, p-value: {p_value:.4f}")
 ```
 
+::: {.output .stream .stdout}
     Pearson Correlation Coefficient: 0.27, p-value: 0.2098
+:::
+:::
 
+::: {#a88dcf66-74c7-494a-ae21-ca8c6f86fd42 .cell .markdown}
+#### Visualise with Regplot {#visualise-with-regplot}
+:::
 
-#### Visualise with Regplot
-
-
-```python
+::: {#1d314411-dd06-41bd-aa9f-7ddb9b1d02e9 .cell .code execution_count="22"}
+``` python
 sns.regplot(x='female_proportion', y='Hours Viewed', data=merged_df)
 plt.title('Regression Plot')
 plt.xlabel('Female Proportion')
@@ -1662,20 +1770,37 @@ plt.ylabel('Hours Viewed')
 plt.show()
 ```
 
+::: {.output .display_data}
+![](vertopal_774da5d1909c452b973377ff55f79410/057b2ed0fbc4b99cdf5b0f36730f6fe5373b968a.png)
+:::
+:::
 
-    
-![png](output_32_0.png)
-    
+::: {#26b8636f-2b0a-46ad-956d-00b535e41528 .cell .markdown}
+**Explanation:** The Correlation Coefficient between the
+\'female_proportion\' and \'Hours Viewed\' is 0.27. The positive
+correlation indicates that as female proportion increases the number of
+hours views also tends to increase. The magnitude of the correlation
+suggests a moderate relationship between the two variables however the P
+value is greater than 0.05 so there is not enough evidence to reject the
+null hypothesis. The null hypothesis in this case is that there is no
+correlation between \'female_proportion\' and \'Hours Viewed.\'
+Therefore, based on the p-value, we do not have sufficient statistical
+evidence to conclude that there is a significant correlation between
+these two variables and we cannot confidently assert a meaningful
+relationship between the proportion of females and the number of hours
+viewed based on these results.
+:::
 
-
-**Explanation:** The Correlation Coefficient between the 'female_proportion' and 'Hours Viewed' is 0.27. The positive correlation indicates that as female proportion increases the number of hours views also tends to increase. The magnitude of the correlation suggests a moderate relationship between the two variables however the P value is greater than 0.05 so there is not enough evidence to reject the null hypothesis. The null hypothesis in this case is that there is no correlation between 'female_proportion' and 'Hours Viewed.' Therefore, based on the p-value, we do not have sufficient statistical evidence to conclude that there is a significant correlation between these two variables and we cannot confidently assert a meaningful relationship between the proportion of females and the number of hours viewed based on these results.
-
+::: {#f9ba140e-973b-4274-9d75-5332b48e92ae .cell .markdown}
 ### White and Female Interaction
 
-Although there is limited significance, here is a visualisation of the relationship between female proportion, white proportion and hours viewed of streaming.
+Although there is limited significance, here is a visualisation of the
+relationship between female proportion, white proportion and hours
+viewed of streaming.
+:::
 
-
-```python
+::: {#bd4c87d9-95f8-4e28-9453-f7374e51a7cc .cell .code execution_count="23"}
+``` python
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.linear_model import LinearRegression
 
@@ -1719,44 +1844,63 @@ ax.set_title('3D Regression Plot')
 plt.show()
 ```
 
+::: {.output .display_data}
+![](vertopal_774da5d1909c452b973377ff55f79410/99deb3557be15db80d94aa4d2ccc29e419e699e6.png)
+:::
+:::
 
-    
-![png](output_35_0.png)
-    
-
-
+::: {#9104f3f5-e59c-45a1-b2b1-1e2ed4f6f06e .cell .markdown}
 ### Conclusion:
-We cannot confidently state that there is any consumer discrimination for netflix streaming. However, the sample under analysis is small and therefore limited, and only included shows available globally. If the data allowed us to investigate US or western-only films, results may differ as the audience reach is likely to be less diverse.
 
+We cannot confidently state that there is any consumer discrimination
+for netflix streaming. However, the sample under analysis is small and
+therefore limited, and only included shows available globally. If the
+data allowed us to investigate US or western-only films, results may
+differ as the audience reach is likely to be less diverse.
+:::
+
+::: {#20931ad8-0df3-4cdb-a322-5a468c09630e .cell .markdown}
 ### Future Analysis
 
-The observed group variance of 14.666 in our mixed linear model is indicative of significant differences in movie attendance across genres, suggesting that genre may play a pivotal role in shaping audience turnout. This finding highlights the potential for genre-specific audience preferences and behaviors that could be crucial for industry stakeholders and content creators.
+The observed group variance of 14.666 in our mixed linear model is
+indicative of significant differences in movie attendance across genres,
+suggesting that genre may play a pivotal role in shaping audience
+turnout. This finding highlights the potential for genre-specific
+audience preferences and behaviors that could be crucial for industry
+stakeholders and content creators.
 
+Considering the substantial variance attributed to genres, future
+research should prioritize:
 
-Considering the substantial variance attributed to genres, future research should prioritize:
+Dissecting Genre-Specific Dynamics: Delving into the unique audience
+preferences within each genre could elucidate distinct factors that
+drive attendance, informing targeted production and marketing
+strategies.
 
+Evaluating Contextual Influences: Investigating the historical and
+cultural underpinnings that characterize different genres may provide
+insight into their varying impact on audience engagement.
 
-Dissecting Genre-Specific Dynamics: Delving into the unique audience preferences within each genre could elucidate distinct factors that drive attendance, informing targeted production and marketing strategies.
+Analyzing Marketing Efficacy: Assessing the success of genre-specific
+marketing campaigns in relation to cast diversity could reveal strategic
+insights for optimizing promotional efforts.
 
+Diversity and Genre Receptivity: Exploring how changes in cast diversity
+are received in traditionally homogeneous genres could uncover new
+opportunities for inclusive storytelling.
 
-Evaluating Contextual Influences: Investigating the historical and cultural underpinnings that characterize different genres may provide insight into their varying impact on audience engagement.
+Intersectional Portrayals: It is crucial to examine how intersectional
+identities are presented across genres and their influence on market
+performance.
 
+Future investigations should employ robust statistical methods capable
+of disentangling the complex interplay between genre, audience
+preferences, and diversity factors. Such research is essential for a
+comprehensive understanding of the determinants of success in the movie
+industry.
+:::
 
-Analyzing Marketing Efficacy: Assessing the success of genre-specific marketing campaigns in relation to cast diversity could reveal strategic insights for optimizing promotional efforts.
-
-
-Diversity and Genre Receptivity: Exploring how changes in cast diversity are received in traditionally homogeneous genres could uncover new opportunities for inclusive storytelling.
-
-
-Intersectional Portrayals: It is crucial to examine how intersectional identities are presented across genres and their influence on market performance.
-
-Future investigations should employ robust statistical methods capable of disentangling the complex interplay between genre, audience preferences, and diversity factors. Such research is essential for a comprehensive understanding of the determinants of success in the movie industry.
-
-
-
-
-
-
-```python
-
+::: {#4062e14b-a742-47e7-803d-870cf34b7bbc .cell .code}
+``` python
 ```
+:::
