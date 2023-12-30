@@ -14,12 +14,10 @@ Specifically, this project investigates:
 
 ![Hypotheses Diagram](images/hypotheses_image.png)
 
-### Process - need to do
-- add notes on process
+### Process 
+- First page is Replication_Cleaning, then Replication_Results, then Further_Analysis
+- Replication of paper then further analysis
 
-### Installation instructions for user 
-- words
-- bash
 
 ### Installation instructions for contributors
 
