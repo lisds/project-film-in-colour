@@ -3158,12 +3158,166 @@ clean_df.head()
 
 
 
+
+```python
+clean_df_2 = merged_df.loc[:, [
+    'white_proportion',
+    'female_proportion',
+    'genres',
+    'average_age',
+    'attendance_in_mills',
+    'budget_in_mills',
+    'highest_starpower',
+    'genre_action (Dummy)',
+    'genre_comedy (Dummy)',
+    'genre_drama (Dummy)',
+    'genre_other (Dummy)',
+    'content_rating (Dummy)_PG',
+    'content_rating (Dummy)_PG-13',
+    'content_rating (Dummy)_R',
+]]
+
+#display
+clean_df_2.head() 
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>white_proportion</th>
+      <th>female_proportion</th>
+      <th>genres</th>
+      <th>average_age</th>
+      <th>attendance_in_mills</th>
+      <th>budget_in_mills</th>
+      <th>highest_starpower</th>
+      <th>genre_action (Dummy)</th>
+      <th>genre_comedy (Dummy)</th>
+      <th>genre_drama (Dummy)</th>
+      <th>genre_other (Dummy)</th>
+      <th>content_rating (Dummy)_PG</th>
+      <th>content_rating (Dummy)_PG-13</th>
+      <th>content_rating (Dummy)_R</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>Action|Adventure|Fantasy</td>
+      <td>36.000000</td>
+      <td>45.0</td>
+      <td>300.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.000000</td>
+      <td>0.333333</td>
+      <td>Action|Adventure|Romance</td>
+      <td>35.333333</td>
+      <td>49.0</td>
+      <td>258.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.000000</td>
+      <td>0.666667</td>
+      <td>Adventure|Family|Fantasy</td>
+      <td>53.000000</td>
+      <td>10.0</td>
+      <td>180.0</td>
+      <td>30</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.666667</td>
+      <td>0.000000</td>
+      <td>Comedy|Family|Fantasy</td>
+      <td>42.000000</td>
+      <td>15.0</td>
+      <td>175.0</td>
+      <td>20</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.333333</td>
+      <td>1.000000</td>
+      <td>Action|Adventure|Comedy</td>
+      <td>33.000000</td>
+      <td>24.0</td>
+      <td>168.0</td>
+      <td>229</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 ### Save as a CSV
 
 
 ```python
 # export into data folder
 clean_df.to_csv('data/clean_data.csv', index=False)
+clean_df_2.to_csv('data/clean_data_2.csv', index=False)
+
 
 ```
 
