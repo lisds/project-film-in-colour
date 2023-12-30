@@ -1,4 +1,4 @@
-# Film in Colour
+# Diversity on Screen: Unraveling the Impact of Minority Representation in Film on Consumer Attitudes and Industry Practices
 
 This project explores the impact of the leading cast's diversity on Hollywood movie box office performance, aiming to replicate the findings of Xing Fan's (2021) master's thesis and conducting additional analyses.
 
